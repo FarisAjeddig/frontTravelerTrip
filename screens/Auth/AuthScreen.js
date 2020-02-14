@@ -88,7 +88,6 @@ export default class AuthScreen extends React.Component {
         //   // type === 'cancel'
         // }
       } catch ({ message }) {
-        console.log(await response.json());
         Alert.alert(`Facebook Login Error: ${message}`);
       }
     }
@@ -127,7 +126,6 @@ export default class AuthScreen extends React.Component {
 
 
     submitToAPI() {
-      console.log('SubmitToAPI');
       let data = {
         method: 'POST',
         credentials: 'same-origin',
@@ -145,7 +143,6 @@ export default class AuthScreen extends React.Component {
       return fetch( Api + '/api/login', data)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
         switch (responseJson.statut) {
           case 'ERROR':
             this.setState({messageError: responseJson.message});
@@ -174,7 +171,6 @@ export default class AuthScreen extends React.Component {
     }
 
     _goInscription() {
-      console.log('Go to register');
       this.props.navigation.navigate('SignUp');
     }
 

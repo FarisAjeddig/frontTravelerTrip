@@ -56,7 +56,7 @@ export default class FirstLaunchScreen extends React.Component {
     componentDidMount = () => {
       AsyncStorage.getItem('firstlaunch').then((value) => {
         if (value !== 'true'){
-          this.props.navigation.navigate('Main');
+          this.props.navigation.navigate('MainApp');
         } else {
           try {
             AsyncStorage.setItem('firstlaunch', 'false');
@@ -107,7 +107,7 @@ export default class FirstLaunchScreen extends React.Component {
             'false'
           ];
           this.setDataToAsyncStorage(keys, values);
-          this.props.navigation.navigate('Main');
+          this.props.navigation.navigate('MainApp');
         }
         })
       .catch((error) => {

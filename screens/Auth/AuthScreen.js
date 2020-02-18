@@ -41,9 +41,10 @@ export default class AuthScreen extends React.Component {
 
     componentDidMount = () => {
       AsyncStorage.getItem('email').then((value) => {
-        if (value !== null){
-          this.props.navigation.navigate('FirstLaunch');
-        }
+        console.log(value);
+        // if (value !== null){
+          this.props.navigation.navigate('MainApp');
+        // }
       });
     }
 
@@ -92,7 +93,7 @@ export default class AuthScreen extends React.Component {
           if (responseJson.user.firstlaunch == true){
             this.props.navigation.navigate('FirstLaunch');
           } else {
-            this.props.navigation.navigate('Main');
+            this.props.navigation.navigate('MainApp');
           }
         })
         .catch((error) => {
@@ -187,11 +188,11 @@ export default class AuthScreen extends React.Component {
               responseJson.user.firstlaunch.toString()
             ];
             this.setDataToAsyncStorage(keys, values);
-            
+
             if (responseJson.user.firstlaunch){
               this.props.navigation.navigate('FirstLaunch');
             } else {
-              this.props.navigation.navigate('Main');
+              this.props.navigation.navigate('MainApp');
             }
             break;
           default:

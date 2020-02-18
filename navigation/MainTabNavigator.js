@@ -6,137 +6,242 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 
 import TabBarIcon from '../components/TabBarIcon';
 import MapScreen from '../screens/MapScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import List from '../screens/List';
+import Profile from '../screens/Profile';
 
 import AuthScreen from '../screens/Auth/AuthScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen';
 import FirstLaunchScreen from '../screens/Auth/FirstLaunchScreen';
 
-const config = Platform.select({
-  web: { headerMode: 'screen' },
-  default: {},
-});
 
-// Stack pour les premières fenetres : inscription, connexion
+// // Stack pour les premières fenetres : inscription, connexion
+//
+// const AuthStack = createStackNavigator({
+//     Auth: {
+//       screen: AuthScreen,
+//       navigationOptions: {
+//         headerTransparent: true,
+//         headerTintColor: 'white'
+//       }
+//     },
+//     SignUp: {
+//       screen: RegisterScreen,
+//       navigationOptions: {
+//         title: "Signup"
+//       }
+//     }
+//   }
+// );
+//
+// const FirstLaunchStack = createStackNavigator(
+//   {
+//   FirstLaunch: FirstLaunchScreen
+//   }
+// );
+//
+//
+// const HomeStack = createStackNavigator({
+//   Home: {
+//     screen: MapScreen,
+//     navigationOptions: {
+//       tabBarVisible: false
+//     }
+//   }
+// });
+//
+// const ListStack = createStackNavigator({
+//   List: {
+//     screen: List,
+//     navigationOptions: {
+//       tabBarVisible: false,
+//       header: null
+//     }
+//   }
+// });
+//
+// // Stack pour toutes les pages du profil
+// const ProfileStack = createStackNavigator({
+//  Profile: {
+//    screen: Profile,
+//    navigationOptions: {
+//           header: null,
+//           tabBarIcon: ({ focused, tintColor }) => {
+//             <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
+//           }
+//       }
+//  },
+//  // EditProfile: {
+//  //   screen: EditProfile,
+//  //   navigationOptions: {
+//  //     title: 'Modifier ses informations personnelles'
+//  //   }
+//  // }
+// });
+//
+//
+// const TabNavigator = createBottomTabNavigator({
+//  HomeStack: {
+//    screen: HomeStack,
+//    navigationOptions: {
+//      tabBarIcon: ({ focused }) => (
+//        <TabBarIcon
+//          focused={focused}
+//          name={
+//            Platform.OS === 'ios'
+//              ? `ios-map${focused ? '' : '-outline'}`
+//              : 'md-map'
+//          }
+//        />
+//      ),
+//      tabBarLabel: 'Carte'
+//    }
+//  },
+//  Main: {
+//    screen: ListStack,
+//    navigationOptions: {
+//          tabBarIcon: ({ focused }) => (
+//            <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
+//          ),
+//           tabBarLabel: 'Liste',
+//           tabBarVisible: true
+//       }
+//  },
+//  Profile: {
+//    screen: ProfileStack,
+//    navigationOptions: {
+//      tabBarIcon: ({ focused, tintColor }) => {
+//        <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
+//      },
+//      tabBarVisible: false
+//    }
+//  }
+// },
+// {
+//   defaultNavigationOptions: ({ navigation }) => ({
+//   }),
+//   tabBarOptions: {
+//   },
+// });
+//
+//
+// export default createSwitchNavigator({
+//   Auth: AuthStack,
+//   FirstLaunch: FirstLaunchStack,
+//   Main: TabNavigator
+// }, {
+//   initialRouteName: 'Auth'
+// })
 
-const AuthStack = createStackNavigator({
-    HomeLogin: {
-      screen: AuthScreen,
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
+// Stack pour les premières fenetres : Choix de l'inscription/connexion, inscription, et connexion
+ const AuthNavigator = createStackNavigator({
+   Auth: {
+     screen: AuthScreen,
+     navigationOptions: {
+       headerTransparent: true,
+       headerTintColor: 'white'
+     }
+
+   },
+   SignUp: {
+     screen: RegisterScreen,
+     navigationOptions: {
+       headerTransparent: true,
+       headerTintColor: 'white'
+     }
+   }
+ });
+
+  const FirstLaunchNavigator = createStackNavigator({
+    FirstLaunch: {
+      screen: FirstLaunchScreen,
       navigationOptions: {
-        headerTransparent: true,
-        headerTintColor: 'white'
-      }
-    },
-    SignUp: {
-      screen: RegisterScreen,
-      navigationOptions: {
-        title: "Signup"
+        tabBarVisible: false
       }
     }
-  },
-  config
-);
+  });
 
-AuthStack.path = '';
+ const ListNavigator = createStackNavigator({
+   List: {
+     screen: List,
+     navigationOptions: {
+       tabBarVisible: false
+     }
+   }
+ });
 
-AuthStack.navigationOptions = {
-  tabBarLabel: 'HomeLogin',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
-};
+ const HomeNavigator = createStackNavigator({
+   MainHome: {
+     screen: MapScreen,
+     navigationOptions: {
+       header: null
+     }
+   }
+ })
 
-
-const FirstLaunchStack = createStackNavigator(
-  {
-  FirstLaunch: FirstLaunchScreen
-  },
-  config
-);
-
-FirstLaunchStack.path = '';
-
-const HomeStack = createStackNavigator(
-  {
-    Home: MapScreen,
-  },
-  config
-);
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Carte',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-map${focused ? '' : '-outline'}`
-          : 'md-map'
-      }
-    />
-  ),
-};
-
-HomeStack.path = '';
-
-const LinksStack = createStackNavigator(
-  {
-    Links: LinksScreen,
-  },
-  config
-);
-
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Liste',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
-  ),
-};
-
-LinksStack.path = '';
-
-const SettingsStack = createStackNavigator(
-  {
-    Settings: SettingsScreen,
-  },
-  config
-);
-
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Profil',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-person' : 'md-person'} />
-  ),
-};
-
-SettingsStack.path = '';
-
-const TabNavigator = createBottomTabNavigator({
-  HomeStack: {
-    screen: HomeStack
-  },
-  LinksStack: {
-    screen: LinksStack
-  },
-  SettingsStack: {
-    screen: SettingsStack
-  }
+// Stack pour toutes les pages du profil
+const ProfilNavigator = createStackNavigator({
+ Profil: {
+   screen: Profile,
+   navigationOptions: {
+     header: null
+   }
+ }
 });
 
-TabNavigator.path = '';
+// Stack "générale" qui comprend les trois onglets, et leurs "sous-navigation"
+const Navigator = createBottomTabNavigator({
+ MainHome: {
+   screen: HomeNavigator,
+   navigationOptions: {
+     tabBarIcon: ({ focused, tintColor }) => (
+       <TabBarIcon focused={focused} name={ Platform.OS === 'ios' ? `ios-map${focused ? '' : '-outline'}` : 'md-map' } />
+     ),
+     tabBarLabel: 'Carte'
+   }
+ },
+ List: {
+   screen: List,
+   navigationOptions: {
+     tabBarIcon: ({ focused, tintColor }) => {
+       return <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />;
+     },
+     tabBarLabel: 'Liste'
+   }
+ },
+ Profil: {
+   screen: ProfilNavigator,
+   navigationOptions: {
+     tabBarIcon: ({ focused, tintColor }) => {
+       const iconName = `ios-person${!focused ? '' : ''}`;
+       return <Ionicons name={iconName} size={25} color={tintColor} />;
+     },
+     tabBarVisible: true,
+     tabBarLabel: 'Mon profil'
+   }
+ }
+},
+{
+  defaultNavigationOptions: ({ navigation }) => ({
+  }),
+  tabBarOptions: {
+    // activeTintColor: 'white',
+    // inactiveTintColor: 'rgb(58, 43, 101)'
+  },
+});
+
+
+
 
 export default createSwitchNavigator({
-  Auth: AuthStack,
-  FirstLaunch: FirstLaunchStack,
-  Main: TabNavigator
-}, {
+  Auth: AuthNavigator,
+  FirstLaunch: FirstLaunchNavigator,
+  MainApp: Navigator,
+  List: ListNavigator,
+  ProfilNav: ProfilNavigator
+},
+{
   initialRouteName: 'Auth'
-})
+});

@@ -38,6 +38,12 @@ export default class RegisterScreen extends React.Component {
         })
     }
 
+    async setDataToAsyncStorage(keys, values){
+      for (p=0; p<keys.length; p++){
+        AsyncStorage.setItem(keys[p], values[p]);
+      }
+    };
+
     onMailChange(mail) {
       this.email = mail
     }
@@ -101,6 +107,24 @@ export default class RegisterScreen extends React.Component {
             this.setState({modalVisible: true});
             break;
           case 'SUCCESS':
+            console.log(responseJson.user);
+            let keys = [
+              'email',
+              'id',
+              'name',
+              'interests',
+              'availability',
+              'firstlaunch'
+            ];
+            let values = [
+              this.email,
+              responseJson.user._id,
+              responseJson.user.name,
+              responseJson.user.interests,
+              responseJson.user.availability,
+              responseJson.user.firstlaunch.toString()
+            ];
+            this.setDataToAsyncStorage(keys, values);
             Alert.alert('Votre compte a bien été créé !')
             this.props.navigation.navigate('FirstLaunch');
             break;

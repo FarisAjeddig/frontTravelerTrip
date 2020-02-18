@@ -43,13 +43,35 @@ export default class FirstLaunchScreen extends React.Component {
               restaurant: false,
               sport: false,
               tourism: false,
-              carsharing: false
+              carsharing: false,
+              other: false
             },
+            AllDay: false,
             loading: false,
             modalVisible: false,
             messageError: ""
         })
     }
+
+    componentDidMount = () => {
+      AsyncStorage.getItem('firstlaunch').then((value) => {
+        if (value !== 'true'){
+          this.props.navigation.navigate('Main');
+        } else {
+          try {
+            AsyncStorage.setItem('firstlaunch', 'false');
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+    }
+
+    async setDataToAsyncStorage(keys, values){
+      for (p=0; p<keys.length; p++){
+        AsyncStorage.setItem(keys[p], values[p]);
+      }
+    };
 
     submit() {
       this.setState({loading: true})
@@ -78,6 +100,13 @@ export default class FirstLaunchScreen extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.statut==="SUCCESS"){
+          let keys = [
+            'firstlaunch'
+          ];
+          let values = [
+            'false'
+          ];
+          this.setDataToAsyncStorage(keys, values);
           this.props.navigation.navigate('Main');
         }
         })
@@ -152,6 +181,12 @@ export default class FirstLaunchScreen extends React.Component {
                     onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a18to22: !this.state.checkedAvailabilities.a18to22} }); }}
                     checked={this.state.checkedAvailabilities.a18to22}
                   />
+                  <CheckBox
+                    center
+                    title='All'
+                    onPress={() => { this.setState({ AllDay: !this.state.AllDay, checkedAvailabilities: {a18to22: !this.state.AllDay, a6to8: !this.state.AllDay, a8to12: !this.state.AllDay, a12to14: !this.state.AllDay, a14to18: !this.state.AllDay} }); }}
+                    checked={this.state.AllDay}
+                  />
                 </View>
               </View>
 
@@ -193,6 +228,12 @@ export default class FirstLaunchScreen extends React.Component {
                     title='Carsharing'
                     onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, carsharing: !this.state.checkedInterests.carsharing} }); }}
                     checked={this.state.checkedInterests.carsharing}
+                  />
+                  <CheckBox
+                    center
+                    title='Autre'
+                    onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, other: !this.state.checkedInterests.other} }); }}
+                    checked={this.state.checkedInterests.other}
                   />
                 </View>
               </View>

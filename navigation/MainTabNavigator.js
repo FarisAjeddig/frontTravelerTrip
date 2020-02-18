@@ -5,7 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
+import MapScreen from '../screens/MapScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
@@ -66,7 +66,7 @@ FirstLaunchStack.path = '';
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Home: MapScreen,
   },
   config
 );

@@ -39,6 +39,14 @@ export default class AuthScreen extends React.Component {
         })
     }
 
+    componentDidMount = () => {
+      AsyncStorage.getItem('email').then((value) => {
+        if (value !== null){
+          this.props.navigation.navigate('FirstLaunch');
+        }
+      });
+    }
+
     loginWithFacebook = async () => {
       try {
         await Facebook.initializeAsync(fbId);
@@ -64,15 +72,28 @@ export default class AuthScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
           let keys = [
-            'email'
+            'email',
+            'id',
+            'name',
+            'interests',
+            'availability',
+            'firstlaunch'
           ];
           let values = [
-            responseJson.user.email
+            this.email,
+            responseJson.user._id,
+            responseJson.user.name,
+            responseJson.user.interests,
+            responseJson.user.availability,
+            responseJson.user.firstlaunch.toString()
           ];
           this.setDataToAsyncStorage(keys, values);
 
-
-          this.props.navigation.navigate('FirstLaunch');
+          if (responseJson.user.firstlaunch == true){
+            this.props.navigation.navigate('FirstLaunch');
+          } else {
+            this.props.navigation.navigate('Main');
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -93,8 +114,8 @@ export default class AuthScreen extends React.Component {
     }
 
     async setDataToAsyncStorage(keys, values){
-      for (i=0; i<keys.length; i++){
-        AsyncStorage.setItem(keys[i], values[i]);
+      for (p=0; p<keys.length; p++){
+        AsyncStorage.setItem(keys[p], values[p]);
       }
     };
 
@@ -150,14 +171,28 @@ export default class AuthScreen extends React.Component {
             break;
           case 'SUCCESS':
             let keys = [
-              'email'
+              'email',
+              'id',
+              'name',
+              'interests',
+              'availability',
+              'firstlaunch'
             ];
             let values = [
-              this.email
+              this.email,
+              responseJson.user._id,
+              responseJson.user.name,
+              responseJson.user.interests,
+              responseJson.user.availability,
+              responseJson.user.firstlaunch.toString()
             ];
             this.setDataToAsyncStorage(keys, values);
-
-            this.props.navigation.navigate('FirstLaunch');
+            
+            if (responseJson.user.firstlaunch){
+              this.props.navigation.navigate('FirstLaunch');
+            } else {
+              this.props.navigation.navigate('Main');
+            }
             break;
           default:
             this.setState({messageError: "Réessayez, il y a eu une erreur."});
@@ -241,7 +276,7 @@ export default class AuthScreen extends React.Component {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.tabBarInfoContainer, {backgroundColor: 'blue', alignItems: 'center', marginTop: "20%"}}
+                style={styles.tabBarInfoContainer, {backgroundColor: '#294f79', alignItems: 'center', marginTop: "20%"}}
                 onPress={() => this._goInscription()}>
                 <View style={{justifyContent:'center'}}>
                   <Text style={{justifyContent:'center',color: 'white',paddingTop: 15,paddingBottom: 15,fontSize: 18,marginLeft: 50,marginRight: 50, color: 'white'}}>INSCRIPTION</Text>

@@ -12,8 +12,10 @@ import {
   Dimensions,
   Alert,
   ToastAndroid,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
+import { Avatar } from 'react-native-elements';
 
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -37,14 +39,13 @@ export default class MapScreen extends React.Component {
         longitude: 2.4440129
       }
     },
-    users: []
+    users: [],
+    loading: true
   }
 
   componentDidMount(){
     AsyncStorage.getItem('email').then((value) => {
-      console.log(value);
       if (value !== null){
-        console.log("VALUE : " + value);
         this.email = value;
       }
     });
@@ -54,23 +55,57 @@ export default class MapScreen extends React.Component {
   _getLocation = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted'){
-      console.log('PERMISSION NOT GRANTED');
+      // console.log('PERMISSION NOT GRANTED');
     }
     const location = await Location.getCurrentPositionAsync();
     this._getOtherUsers(location)
-    this.setState({ location })
+    this.setState({ location, loading: false })
   }
 
+  // Calcul de la distance entre deux points. unit : 'K' pour kilometres, 'M' pour miles, 'N' pour Nautic
+  distance = (lat1, lon1, lat2, lon2, unit) => {
+  	if ((lat1 == lat2) && (lon1 == lon2)) {
+  		return 0;
+  	}
+  	else {
+  		var radlat1 = Math.PI * lat1/180;
+  		var radlat2 = Math.PI * lat2/180;
+  		var theta = lon1-lon2;
+  		var radtheta = Math.PI * theta/180;
+  		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  		if (dist > 1) {
+  			dist = 1;
+  		}
+  		dist = Math.acos(dist);
+  		dist = dist * 180/Math.PI;
+  		dist = dist * 60 * 1.1515;
+  		if (unit=="K") { dist = dist * 1.609344 }
+  		if (unit=="N") { dist = dist * 0.8684 }
+  		return dist;
+  	}
+  }
+
+
   _getOtherUsers = async (location) => {
-    return fetch( Api + "/api/geoloc/users/" + location.coords.longitude + "/" + location.coords.latitude)
+    return fetch( Api + "/api/geoloc/users/" + location.coords.longitude + "/" + location.coords.latitude + "/" + this.email)
       .then((response) => response.json())
       .then((responseJson) => {
         var result = [];
-        for(var i in responseJson){
-          result.push(responseJson[i]);
+        for (let user of responseJson.users) {
+          console.log(user);
+          if (user.email !== this.email && (this.distance(this.state.location.coords.latitude, this.state.location.coords.longitude, user.lastLat, user.lastLong, 'K' < 20))) {
+            if (user.picture === undefined){
+              user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
+            } else if (!(user.picture.split(':')[0] === "https")){
+              user.picture =  Api + "/" + user.picture
+            }
+            result.push(user);
+          }
         }
-        console.log(result[0]);
-        this.setState({users: result[0]})
+
+        // result = responseJson.users
+
+        this.setState({users: result})
       })
       .catch((error) => {
         console.error(error);
@@ -84,7 +119,7 @@ export default class MapScreen extends React.Component {
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
-        email: this.email ? this.email : "fajeddig@hotmail.fr",
+        email: this.email,
         coords: location.coords
       }),
       headers: {
@@ -98,10 +133,10 @@ export default class MapScreen extends React.Component {
     .then((responseJson) => {
       switch (responseJson.statut) {
         case 'ERROR':
-          ToastAndroid.show(responseJson.message);
+          // ToastAndroid.show(responseJson.message);
           break;
         case 'SUCCESS':
-          ToastAndroid.show('Nouvelle position enregistrée.', ToastAndroid.SHORT);
+          // ToastAndroid.show('Nouvelle position enregistrée.', ToastAndroid.SHORT);
           break;
         default:
           ToastAndroid.show("Il y a eu une erreur.");
@@ -123,23 +158,25 @@ export default class MapScreen extends React.Component {
   prevtime = Date.now()-12000;
 
   render() {
-    Location.watchPositionAsync({
-      accuracy: Location.Accuracy.Balanced
-    },
-      location => {
-        if ((Date.now() - this.prevtime) > 10000){
-          this.prevtime = Date.now();
-          ToastAndroid.show('Nouvelle position récupérée.', ToastAndroid.SHORT);
-          // Send new coords to back-end
-          this.submitToAPI(location)
-          this._getOtherUsers(location)
+    // if (!this.state.loading){
+      Location.watchPositionAsync({
+        accuracy: Location.Accuracy.Balanced
+      },
+        location => {
+          if ((Date.now() - this.prevtime) > 10000){
+            this.prevtime = Date.now();
+            // ToastAndroid.show('Nouvelle position récupérée.', ToastAndroid.SHORT);
+            // Send new coords to back-end
+            this.submitToAPI(location)
+            this._getOtherUsers(location)
+          }
+          this.setState({location: this.state.location})
         }
-        this.setState({location: this.state.location})
-      }
-    );
+      );
+    // }
+
     return (
       <View style={styles.container}>
-      {/* <Text>{JSON.stringify(this.state.location)}</Text> */}
         <MapView
           style={styles.mapView}
           initialRegion={{
@@ -179,11 +216,17 @@ export default class MapScreen extends React.Component {
               latitude: parseFloat(user.lastLat),
               longitude: parseFloat(user.lastLong)
             }}
-            title={user.email}
-            description={user.password}
+            title={user.name}
+            description={user.position + " chez " + user.enterprise}
             key={user._id}
+            onCalloutPress={() => {this.props.navigation.navigate('UserProfile', {'user': user})}}
           >
-          <Image source={require('../assets/images/marker.png')} style={{ width: 40, height: 40 }} />
+          <Avatar rounded
+          source={{
+            uri: user.picture
+          }}
+          size="small"
+          />
           </MapView.Marker>
         ))}
         </MapView>

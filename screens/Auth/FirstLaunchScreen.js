@@ -18,8 +18,6 @@ import {
 } from 'react-native';
 import * as Facebook from 'expo-facebook';
 import { CheckBox, Button } from 'react-native-elements';
-import {TextField} from 'react-native-material-textfield';
-import PasswordInputText from 'react-native-hide-show-password-input';
 import Api from '../../constants/Api';
 
 const fbId = "237940337207466";
@@ -29,6 +27,7 @@ export default class FirstLaunchScreen extends React.Component {
 
     constructor(props) {
         super(props);
+        this.email = "";
 
         this.state = ({
             checkedAvailabilities: {
@@ -49,11 +48,20 @@ export default class FirstLaunchScreen extends React.Component {
             AllDay: false,
             loading: false,
             modalVisible: false,
-            messageError: ""
+            messageError: "",
+            facebook: false
         })
     }
 
     componentDidMount = () => {
+      AsyncStorage.getItem('email').then((value) => {
+        this.email = value;
+        AsyncStorage.getItem('position').then(value => {
+          if (!value){
+            this.setState({facebook: true});
+          }
+        })
+      })
       AsyncStorage.getItem('firstlaunch').then((value) => {
         if (value !== 'true'){
           this.props.navigation.navigate('MainApp');
@@ -68,14 +76,13 @@ export default class FirstLaunchScreen extends React.Component {
     }
 
     async setDataToAsyncStorage(keys, values){
-      for (p=0; p<keys.length; p++){
+      for (let p=0; p<keys.length; p++){
         AsyncStorage.setItem(keys[p], values[p]);
       }
     };
 
     submit() {
       this.setState({loading: true})
-      console.log("SUBMIT");
       return (this.submitToAPI());
     }
 
@@ -88,7 +95,7 @@ export default class FirstLaunchScreen extends React.Component {
         body: JSON.stringify({
           availabilities: this.state.checkedAvailabilities,
           interests: this.state.checkedInterests,
-          email: "fajeddig@hotmail.fr"
+          email: this.email
         }),
         headers: {
           'Accept': 'application/json',
@@ -100,13 +107,11 @@ export default class FirstLaunchScreen extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         if (responseJson.statut==="SUCCESS"){
-          let keys = [
-            'firstlaunch'
-          ];
-          let values = [
-            'false'
-          ];
-          this.setDataToAsyncStorage(keys, values);
+          try {
+            AsyncStorage.setItem('firstlaunch', 'false');
+          } catch (error) {
+            console.log(error);
+          }
           this.props.navigation.navigate('MainApp');
         }
         })
@@ -142,56 +147,9 @@ export default class FirstLaunchScreen extends React.Component {
             <View style={{margin: 20}}>
               <Text style={{fontSize: 25, color: 'red'}}>Dites nous en plus !</Text>
               <Text>Ces données nous permettront de vous proposer des personnes avec lesquels vous "matchez" :)</Text>
-              {/* Availabilities  */}
-              <Text>Quand êtes vous disponible pour rencontrer d'autres voyageurs d'affaire ?</Text>
-              <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10}}>
-                <View style={{flex: 1, flexDirection: 'column'}}>
-
-                  <CheckBox
-                    center
-                    title='6h à 8h'
-                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a6to8: !this.state.checkedAvailabilities.a6to8} }); }}
-                    checked={this.state.checkedAvailabilities.a6to8}
-                  />
-                  <CheckBox
-                    center
-                    title='8h à 12h'
-                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a8to12: !this.state.checkedAvailabilities.a8to12} }); }}
-                    checked={this.state.checkedAvailabilities.a8to12}
-                  />
-                  <CheckBox
-                    center
-                    title='12h à 14h'
-                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a12to14: !this.state.checkedAvailabilities.a12to14} }); }}
-                    checked={this.state.checkedAvailabilities.a12to14}
-                  />
-
-                </View>
-                <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
-
-                  <CheckBox
-                    center
-                    title='14h à 18h'
-                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a14to18: !this.state.checkedAvailabilities.a14to18} }); }}
-                    checked={this.state.checkedAvailabilities.a14to18}
-                  />
-                  <CheckBox
-                    center
-                    title='18h à 22h'
-                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a18to22: !this.state.checkedAvailabilities.a18to22} }); }}
-                    checked={this.state.checkedAvailabilities.a18to22}
-                  />
-                  <CheckBox
-                    center
-                    title='All'
-                    onPress={() => { this.setState({ AllDay: !this.state.AllDay, checkedAvailabilities: {a18to22: !this.state.AllDay, a6to8: !this.state.AllDay, a8to12: !this.state.AllDay, a12to14: !this.state.AllDay, a14to18: !this.state.AllDay} }); }}
-                    checked={this.state.AllDay}
-                  />
-                </View>
-              </View>
 
               {/* Interests  */}
-              <Text style={{marginTop: 30}}>Les sujets sur lesquelles vous souhaiteriez échanger</Text>
+              <Text style={{marginTop: 10}}>Les sujets sur lesquelles vous souhaiteriez échanger</Text>
               <View style={{ flex: 1, marginBottom: 20, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10}}>
                 <View style={{flex: 1, flexDirection: 'column'}}>
 
@@ -237,6 +195,54 @@ export default class FirstLaunchScreen extends React.Component {
                   />
                 </View>
               </View>
+              {/* Availabilities  */}
+              <Text>Quand êtes vous disponible pour rencontrer d'autres voyageurs d'affaire ?</Text>
+              <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, marginBottom: 20}}>
+                <View style={{flex: 1, flexDirection: 'column'}}>
+
+                  <CheckBox
+                    center
+                    title='6h à 8h'
+                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a6to8: !this.state.checkedAvailabilities.a6to8} }); }}
+                    checked={this.state.checkedAvailabilities.a6to8}
+                  />
+                  <CheckBox
+                    center
+                    title='8h à 12h'
+                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a8to12: !this.state.checkedAvailabilities.a8to12} }); }}
+                    checked={this.state.checkedAvailabilities.a8to12}
+                  />
+                  <CheckBox
+                    center
+                    title='12h à 14h'
+                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a12to14: !this.state.checkedAvailabilities.a12to14} }); }}
+                    checked={this.state.checkedAvailabilities.a12to14}
+                  />
+
+                </View>
+                <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+
+                  <CheckBox
+                    center
+                    title='14h à 18h'
+                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a14to18: !this.state.checkedAvailabilities.a14to18} }); }}
+                    checked={this.state.checkedAvailabilities.a14to18}
+                  />
+                  <CheckBox
+                    center
+                    title='18h à 22h'
+                    onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a18to22: !this.state.checkedAvailabilities.a18to22} }); }}
+                    checked={this.state.checkedAvailabilities.a18to22}
+                  />
+                  <CheckBox
+                    center
+                    title='All'
+                    onPress={() => { this.setState({ AllDay: !this.state.AllDay, checkedAvailabilities: {a18to22: !this.state.AllDay, a6to8: !this.state.AllDay, a8to12: !this.state.AllDay, a12to14: !this.state.AllDay, a14to18: !this.state.AllDay} }); }}
+                    checked={this.state.AllDay}
+                  />
+                </View>
+              </View>
+
 
               <Button
                 raised

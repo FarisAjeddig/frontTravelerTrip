@@ -40,14 +40,21 @@ export default class AuthScreen extends React.Component {
     }
 
     componentDidMount = () => {
+      // Si on a déjà les informations d'un utilisateur sur l'application, on va l'emmener directement dessus plutôt que de le refaire s'authentifier.
       AsyncStorage.getItem('email').then((value) => {
-        console.log(value);
-        // if (value !== null){
-          this.props.navigation.navigate('MainApp');
-        // }
+        if (value !== null){
+          AsyncStorage.getItem('firstlaunch').then((value) => {
+            if (value){
+              this.props.navigation.navigate('FirstLaunch');
+            } else {
+              this.props.navigation.navigate('MainApp');
+            }
+          })
+        }
       });
     }
 
+    // Connexion via Facebook
     loginWithFacebook = async () => {
       try {
         await Facebook.initializeAsync(fbId);
@@ -78,15 +85,21 @@ export default class AuthScreen extends React.Component {
             'name',
             'interests',
             'availability',
-            'firstlaunch'
+            'firstlaunch',
+            'picture',
+            'position',
+            'enterprise'
           ];
           let values = [
-            this.email,
+            responseJson.user.email,
             responseJson.user._id,
             responseJson.user.name,
             responseJson.user.interests,
             responseJson.user.availability,
-            responseJson.user.firstlaunch.toString()
+            responseJson.user.firstlaunch.toString(),
+            responseJson.user.picture,
+            responseJson.user.position,
+            responseJson.user.enterprise
           ];
           this.setDataToAsyncStorage(keys, values);
 
@@ -99,23 +112,13 @@ export default class AuthScreen extends React.Component {
         .catch((error) => {
           console.error(error);
         });
-
-        // if (type === 'success') {
-        //   // Get the user's name using Facebook's Graph API
-        //   const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-        //   await console.log(response.json());
-        //   Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
-        // } else {
-        //   Alert.alert(type)
-        //   // type === 'cancel'
-        // }
       } catch ({ message }) {
         Alert.alert(`Facebook Login Error: ${message}`);
       }
     }
 
     async setDataToAsyncStorage(keys, values){
-      for (p=0; p<keys.length; p++){
+      for (let p=0; p<keys.length; p++){
         AsyncStorage.setItem(keys[p], values[p]);
       }
     };
@@ -177,7 +180,10 @@ export default class AuthScreen extends React.Component {
               'name',
               'interests',
               'availability',
-              'firstlaunch'
+              'firstlaunch',
+              'picture',
+              'position',
+              'enterprise'
             ];
             let values = [
               this.email,
@@ -185,7 +191,10 @@ export default class AuthScreen extends React.Component {
               responseJson.user.name,
               responseJson.user.interests,
               responseJson.user.availability,
-              responseJson.user.firstlaunch.toString()
+              responseJson.user.firstlaunch.toString(),
+              responseJson.user.picture,
+              responseJson.user.position,
+              responseJson.user.enterprise
             ];
             this.setDataToAsyncStorage(keys, values);
 
@@ -263,24 +272,26 @@ export default class AuthScreen extends React.Component {
                   onChangeText={(password) => this.onPassChange(password)}
               />
               <TouchableOpacity
-                style={{backgroundColor: 'red',borderRadius: 2,alignSelf: 'center',marginTop: 20}}
+                style={{backgroundColor: 'red',borderRadius: 2,alignSelf: 'center',marginTop: 20, width: "100%"}}
                 onPress={() => this.submit()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',paddingTop: 15,paddingBottom: 15,fontSize: 18,marginLeft: 50,marginRight: 50, color: 'white'}}>CONNEXION</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{alignItems: 'center', paddingTop: 20}} onPress={() => this.loginWithFacebook()}>
-                <View style={{width: "70%", borderRadius: 4, padding: 24, backgroundColor: '#3b5998'}}>
-                  <Text style={{color: 'white', textAlign: 'center'}}>Login to Facebook</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20, color: 'white', textAlign: 'center'}}>Connexion</Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.tabBarInfoContainer, {backgroundColor: '#294f79', alignItems: 'center', marginTop: "20%"}}
+                style={{alignItems: 'center', paddingTop: 60}}
+                onPress={() => this.loginWithFacebook()}>
+                <View style={{borderRadius: 4, padding: 15, backgroundColor: '#3b5998', width: "100%"}}>
+                  <Text style={{color: 'white', textAlign: 'center'}}>Continuer avec Facebook</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, width: "100%"}}
                 onPress={() => this._goInscription()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',paddingTop: 15,paddingBottom: 15,fontSize: 18,marginLeft: 50,marginRight: 50, color: 'white'}}>INSCRIPTION</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20,marginLeft: 50,marginRight: 50, color: 'white'}}>Inscription</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -298,11 +309,5 @@ const styles = StyleSheet.create({
     width: Dimensions.width,
     flex: 1,
     backgroundColor: '#f5efef'
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0
   }
 });

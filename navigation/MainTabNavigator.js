@@ -7,130 +7,16 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import TabBarIcon from '../components/TabBarIcon';
 import MapScreen from '../screens/MapScreen';
 import List from '../screens/List';
+import UserProfile from '../screens/UserProfile';
+
 import Profile from '../screens/Profile';
+import EditProfile from '../screens/Profile/EditProfile';
+import EditAvailAndInter from '../screens/Profile/EditAvailAndInter';
+import ContactUs from '../screens/Profile/ContactUs';
 
 import AuthScreen from '../screens/Auth/AuthScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen';
 import FirstLaunchScreen from '../screens/Auth/FirstLaunchScreen';
-
-
-// // Stack pour les premières fenetres : inscription, connexion
-//
-// const AuthStack = createStackNavigator({
-//     Auth: {
-//       screen: AuthScreen,
-//       navigationOptions: {
-//         headerTransparent: true,
-//         headerTintColor: 'white'
-//       }
-//     },
-//     SignUp: {
-//       screen: RegisterScreen,
-//       navigationOptions: {
-//         title: "Signup"
-//       }
-//     }
-//   }
-// );
-//
-// const FirstLaunchStack = createStackNavigator(
-//   {
-//   FirstLaunch: FirstLaunchScreen
-//   }
-// );
-//
-//
-// const HomeStack = createStackNavigator({
-//   Home: {
-//     screen: MapScreen,
-//     navigationOptions: {
-//       tabBarVisible: false
-//     }
-//   }
-// });
-//
-// const ListStack = createStackNavigator({
-//   List: {
-//     screen: List,
-//     navigationOptions: {
-//       tabBarVisible: false,
-//       header: null
-//     }
-//   }
-// });
-//
-// // Stack pour toutes les pages du profil
-// const ProfileStack = createStackNavigator({
-//  Profile: {
-//    screen: Profile,
-//    navigationOptions: {
-//           header: null,
-//           tabBarIcon: ({ focused, tintColor }) => {
-//             <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
-//           }
-//       }
-//  },
-//  // EditProfile: {
-//  //   screen: EditProfile,
-//  //   navigationOptions: {
-//  //     title: 'Modifier ses informations personnelles'
-//  //   }
-//  // }
-// });
-//
-//
-// const TabNavigator = createBottomTabNavigator({
-//  HomeStack: {
-//    screen: HomeStack,
-//    navigationOptions: {
-//      tabBarIcon: ({ focused }) => (
-//        <TabBarIcon
-//          focused={focused}
-//          name={
-//            Platform.OS === 'ios'
-//              ? `ios-map${focused ? '' : '-outline'}`
-//              : 'md-map'
-//          }
-//        />
-//      ),
-//      tabBarLabel: 'Carte'
-//    }
-//  },
-//  Main: {
-//    screen: ListStack,
-//    navigationOptions: {
-//          tabBarIcon: ({ focused }) => (
-//            <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
-//          ),
-//           tabBarLabel: 'Liste',
-//           tabBarVisible: true
-//       }
-//  },
-//  Profile: {
-//    screen: ProfileStack,
-//    navigationOptions: {
-//      tabBarIcon: ({ focused, tintColor }) => {
-//        <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
-//      },
-//      tabBarVisible: false
-//    }
-//  }
-// },
-// {
-//   defaultNavigationOptions: ({ navigation }) => ({
-//   }),
-//   tabBarOptions: {
-//   },
-// });
-//
-//
-// export default createSwitchNavigator({
-//   Auth: AuthStack,
-//   FirstLaunch: FirstLaunchStack,
-//   Main: TabNavigator
-// }, {
-//   initialRouteName: 'Auth'
-// })
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -167,7 +53,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
    List: {
      screen: List,
      navigationOptions: {
-       tabBarVisible: false
+       header: null
      }
    }
  });
@@ -176,6 +62,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
    MainHome: {
      screen: MapScreen,
      navigationOptions: {
+       header: null
+     }
+   },
+   UserProfile: {
+     screen: UserProfile,
+     navigationOptions: {
+       tabBarVisible: true,
        header: null
      }
    }
@@ -187,6 +80,24 @@ const ProfilNavigator = createStackNavigator({
    screen: Profile,
    navigationOptions: {
      header: null
+   }
+ },
+ EditProfile: {
+   screen: EditProfile,
+   navigationOptions: {
+     title: "Modifier ses informations"
+   }
+ },
+ EditAvailAndInter: {
+   screen: EditAvailAndInter,
+   navigationOptions: {
+     title: "Disponibilités et intérêts"
+   }
+ },
+ ContactUs: {
+   screen: ContactUs,
+   navigationOptions: {
+     title: "Contactez-nous"
    }
  }
 });

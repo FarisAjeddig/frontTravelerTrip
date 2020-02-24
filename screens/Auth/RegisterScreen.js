@@ -26,6 +26,9 @@ export default class RegisterScreen extends React.Component {
     constructor(props) {
         super(props);
         this.email = "";
+        this.name = "";
+        this.position = "";
+        this.enterprise = "";
         this.password = "";
         this.password2 = "";
 
@@ -39,13 +42,25 @@ export default class RegisterScreen extends React.Component {
     }
 
     async setDataToAsyncStorage(keys, values){
-      for (p=0; p<keys.length; p++){
+      for (let p=0; p<keys.length; p++){
         AsyncStorage.setItem(keys[p], values[p]);
       }
     };
 
     onMailChange(mail) {
       this.email = mail
+    }
+
+    onNameChange(name) {
+      this.name = name
+    }
+
+    onPostChange(position) {
+      this.position = position
+    }
+
+    onEnterpriseChange(enterprise) {
+      this.enterprise = enterprise
     }
 
     onPassChange(pass) {
@@ -88,6 +103,9 @@ export default class RegisterScreen extends React.Component {
         mode: 'same-origin',
         body: JSON.stringify({
           email: this.email,
+          name: this.name,
+          position: this.position,
+          enterprise: this.enterprise,
           password: this.password,
           password2: this.password2
         }),
@@ -114,15 +132,21 @@ export default class RegisterScreen extends React.Component {
               'name',
               'interests',
               'availability',
-              'firstlaunch'
+              'firstlaunch',
+              'picture',
+              'position',
+              'enterprise'
             ];
             let values = [
               this.email,
               responseJson.user._id,
-              responseJson.user.name,
+              this.name,
               responseJson.user.interests,
               responseJson.user.availability,
-              responseJson.user.firstlaunch.toString()
+              responseJson.user.firstlaunch.toString(),
+              responseJson.user.picture,
+              this.position,
+              this.enterprise
             ];
             this.setDataToAsyncStorage(keys, values);
             Alert.alert('Votre compte a bien été créé !')
@@ -176,6 +200,48 @@ export default class RegisterScreen extends React.Component {
                 placeholder="example@gmail.com"
                 keyboardType='email-address'
               />
+              <TextField
+                label="Nom et prénom"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(name) => this.onNameChange(name)}
+                value={this.name}
+                placeholder="Martin MATIN"
+                keyboardType='default'
+              />
+              <TextField
+                label="Poste"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(position) => this.onPostChange(position)}
+                value={this.position}
+                placeholder="Directeur des achats"
+                keyboardType='default'
+              />
+              <TextField
+                label="Entreprise"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(enterprise) => this.onEnterpriseChange(enterprise)}
+                value={this.enterprise}
+                placeholder="Macdonalds"
+                keyboardType='default'
+              />
               <PasswordInputText
                   value={this.password}
                   iconColor='black'
@@ -206,10 +272,10 @@ export default class RegisterScreen extends React.Component {
                   onChangeText={(password) => this.onPass2Change(password)}
               />
               <TouchableOpacity
-                style={styles.tabBarInfoContainer, {backgroundColor: 'blue', alignItems: 'center', marginTop: "20%"}}
+                style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, width: "100%"}}
                 onPress={() => this.submit()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',paddingTop: 15,paddingBottom: 15,fontSize: 18,marginLeft: 50,marginRight: 50}}>INSCRIPTION</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20,fontSize: 18}}>Inscription</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -227,11 +293,5 @@ const styles = StyleSheet.create({
     width: Dimensions.width,
     flex: 1,
     backgroundColor: '#f5efef'
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0
   }
 });

@@ -29,9 +29,11 @@ export default class EditAvailAndInter extends React.Component {
             sport: false,
             tourism: false,
             carsharing: false,
-            other: false
+            spectacle: false,
+            shopping: false
           },
           AllDay: false,
+          AllInterest: false,
           loading: false,
           email: ""
       })
@@ -59,7 +61,9 @@ export default class EditAvailAndInter extends React.Component {
                     carsharing: interests.interests.carsharing,
                     restaurant: interests.interests.restaurant,
                     sport: interests.interests.sport,
-                    tourism: interests.interests.tourism
+                    tourism: interests.interests.tourism,
+                    shopping: interests.interests.shopping,
+                    spectacle: interests.interests.spectacle
                   }
                 });
                 AsyncStorage.getItem('email').then((value) => {
@@ -70,7 +74,7 @@ export default class EditAvailAndInter extends React.Component {
           })
         .catch((error) => console.error(error))
         });
-      this.props.navigation.navigate('MainApp');
+      // this.props.navigation.navigate('MainApp');
     });
   }
 
@@ -116,7 +120,7 @@ export default class EditAvailAndInter extends React.Component {
         <View style={{margin: 20}}>
           {/* Interests  */}
           <Text style={{fontSize: 25, color: 'blue', marginTop: 0}}>Vos centres d'intérêts</Text>
-          <View style={{ flex: 1, marginBottom: 20, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10}}>
+          <View style={{ flex: 1, marginBottom: 20, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, margin: -12}}>
             <View style={{flex: 1, flexDirection: 'column'}}>
 
               <CheckBox
@@ -127,7 +131,7 @@ export default class EditAvailAndInter extends React.Component {
               />
               <CheckBox
                 center
-                title='Restaurants'
+                title='Food'
                 onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, restaurant: !this.state.checkedInterests.restaurant} }); }}
                 checked={this.state.checkedInterests.restaurant}
               />
@@ -137,34 +141,46 @@ export default class EditAvailAndInter extends React.Component {
                 onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, sport: !this.state.checkedInterests.sport} }); }}
                 checked={this.state.checkedInterests.sport}
               />
+              <CheckBox
+                center
+                title='Show'
+                onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, spectacle: !this.state.checkedInterests.spectacle} }); }}
+                checked={this.state.checkedInterests.spectacle}
+              />
 
             </View>
             <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
 
               <CheckBox
                 center
-                title='Tourisme'
+                title='Tourism'
                 onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, tourism: !this.state.checkedInterests.tourism} }); }}
                 checked={this.state.checkedInterests.tourism}
               />
               <CheckBox
                 center
-                title='Carsharing'
+                title='Car Sharing'
                 onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, carsharing: !this.state.checkedInterests.carsharing} }); }}
                 checked={this.state.checkedInterests.carsharing}
               />
               <CheckBox
                 center
-                title='Autre'
-                onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, other: !this.state.checkedInterests.other} }); }}
-                checked={this.state.checkedInterests.other}
+                title='Shopping'
+                onPress={() => { this.setState({ checkedInterests: {...this.state.checkedInterests, shopping: !this.state.checkedInterests.shopping} }); }}
+                checked={this.state.checkedInterests.shopping}
+              />
+              <CheckBox
+                center
+                title='All'
+                onPress={() => { this.setState({ AllInterest: !this.state.AllInterest, checkedInterests: {business: !this.state.AllInterest, restaurant: !this.state.AllInterest, sport: !this.state.AllInterest, tourism: !this.state.AllInterest, carsharing: !this.state.AllInterest, spectacle: !this.state.AllInterest, shopping: !this.state.AllInterest} }); }}
+                checked={this.state.AllInterest}
               />
             </View>
           </View>
 
           {/* Availabilities  */}
           <Text style={{fontSize: 25, color: 'red'}}>Vos disponibilités</Text>
-          <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, marginBottom: 20}}>
+          <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, marginBottom: 20, margin: -12}}>
             <View style={{flex: 1, flexDirection: 'column'}}>
 
               <CheckBox

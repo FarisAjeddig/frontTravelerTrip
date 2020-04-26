@@ -19,6 +19,7 @@ import {
 import * as Facebook from 'expo-facebook';
 import { CheckBox, Button } from 'react-native-elements';
 import Api from '../../constants/Api';
+import {TextField, OutlinedTextField} from 'react-native-material-textfield';
 
 const fbId = "237940337207466";
 const fbSecret = "2c22afd4578ecbff2eea71d76be8d0f6";
@@ -28,6 +29,10 @@ export default class FirstLaunchScreen extends React.Component {
     constructor(props) {
         super(props);
         this.email = "";
+        this.name = "";
+        this.position = "";
+        this.enterprise = "";
+        this.phone = "";
 
         this.state = ({
             checkedAvailabilities: {
@@ -60,7 +65,7 @@ export default class FirstLaunchScreen extends React.Component {
       })
       AsyncStorage.getItem('firstlaunch').then((value) => {
         if (value !== 'true'){
-          this.props.navigation.navigate('MainApp');
+          // this.props.navigation.navigate('MainApp');
         } else {
           try {
             AsyncStorage.setItem('firstlaunch', 'false');
@@ -76,6 +81,19 @@ export default class FirstLaunchScreen extends React.Component {
         AsyncStorage.setItem(keys[p], values[p]);
       }
     };
+
+    onPostChange(position) {
+      this.position = position
+    }
+
+    onEnterpriseChange(enterprise) {
+      this.enterprise = enterprise
+    }
+
+    onPhoneChange(phone) {
+      this.phone = phone
+    }
+
 
     submit() {
       this.setState({loading: true})
@@ -108,12 +126,78 @@ export default class FirstLaunchScreen extends React.Component {
           } catch (error) {
             console.log(error);
           }
-          this.props.navigation.navigate('MainApp');
+          return (this.submitTextFieldsToAPI())
         }
         })
       .catch((error) => {
         console.error(error);
         this.setState({loading: false})
+      });
+    }
+
+    submitTextFieldsToAPI() {
+      let data = {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        body: JSON.stringify({
+          email: this.email,
+          position: this.position,
+          enterprise: this.enterprise,
+          phone: this.phone
+        }),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      };
+
+      return fetch( Api + '/api/update/facebook', data)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+        switch (responseJson.statut) {
+          case 'ERROR':
+            this.setState({messageError: responseJson.message});
+            this.setState({modalVisible: true});
+            break;
+          case 'SUCCESS':
+            console.log(responseJson.user);
+            let keys = [
+              'email',
+              'id',
+              'name',
+              'phone',
+              'interests',
+              'availability',
+              'firstlaunch',
+              'picture',
+              'position',
+              'enterprise'
+            ];
+            let values = [
+              this.email,
+              responseJson.user._id,
+              this.name,
+              this.phone,
+              responseJson.user.interests,
+              responseJson.user.availability,
+              'false',
+              responseJson.user.picture,
+              this.position,
+              this.enterprise
+            ];
+            this.setDataToAsyncStorage(keys, values);
+            this.props.navigation.navigate('MainApp');
+            break;
+          default:
+            this.setState({messageError: "Réessayez, il y a eu une erreur."});
+            this.setState({modalVisible: true});
+            break;
+          }
+        })
+      .catch((error) => {
+        console.error(error);
       });
     }
 
@@ -142,6 +226,51 @@ export default class FirstLaunchScreen extends React.Component {
 
             <View style={{margin: 20}}>
               <Text style={{fontSize: 25, color: 'red'}}>Dites nous en plus !</Text>
+
+              <TextField
+                label="Poste"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(position) => this.onPostChange(position)}
+                value={this.position}
+                placeholder="Directeur des achats"
+                keyboardType='default'
+              />
+              <TextField
+                label="Entreprise"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(enterprise) => this.onEnterpriseChange(enterprise)}
+                value={this.enterprise}
+                placeholder="Macdonalds"
+                keyboardType='default'
+              />
+
+              <TextField
+                label='Phone number'
+                placeholder="+33612345678"
+                keyboardType='phone-pad'
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(phone) => this.onPhoneChange(phone)}
+                value={this.enterprise}
+              />
+
               <Text>Ces données nous permettront de vous proposer des personnes avec lesquels vous "matchez" :)</Text>
 
               {/* Interests  */}

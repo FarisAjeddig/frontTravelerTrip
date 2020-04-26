@@ -17,6 +17,7 @@ import ContactUs from '../screens/Profile/ContactUs';
 import AuthScreen from '../screens/Auth/AuthScreen';
 import RegisterScreen from '../screens/Auth/RegisterScreen';
 import FirstLaunchScreen from '../screens/Auth/FirstLaunchScreen';
+import FirstLaunchWithFacebookScreen from '../screens/Auth/FirstLaunchWithFacebookScreen';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -40,14 +41,23 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
    }
  });
 
-  const FirstLaunchNavigator = createStackNavigator({
-    FirstLaunch: {
-      screen: FirstLaunchScreen,
-      navigationOptions: {
-        tabBarVisible: false
-      }
-    }
-  });
+ const FirstLaunchNavigator = createStackNavigator({
+   FirstLaunch: {
+     screen: FirstLaunchScreen,
+     navigationOptions: {
+       tabBarVisible: false
+     }
+   }
+ });
+
+ const FirstLaunchWithFacebookNavigator = createStackNavigator({
+   FirstLaunchWithFacebook: {
+     screen: FirstLaunchWithFacebookScreen,
+     navigationOptions: {
+       tabBarVisible: false
+     }
+   }
+ });
 
  const ListNavigator = createStackNavigator({
    List: {
@@ -104,6 +114,15 @@ const ProfilNavigator = createStackNavigator({
 
 // Stack "générale" qui comprend les trois onglets, et leurs "sous-navigation"
 const Navigator = createBottomTabNavigator({
+  List: {
+    screen: List,
+    navigationOptions: {
+      tabBarIcon: ({ focused, tintColor }) => {
+        return <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />;
+      },
+      tabBarLabel: 'Liste'
+    }
+  },
  MainHome: {
    screen: HomeNavigator,
    navigationOptions: {
@@ -111,15 +130,6 @@ const Navigator = createBottomTabNavigator({
        <TabBarIcon focused={focused} name={ Platform.OS === 'ios' ? `ios-map${focused ? '' : '-outline'}` : 'md-map' } />
      ),
      tabBarLabel: 'Carte'
-   }
- },
- List: {
-   screen: List,
-   navigationOptions: {
-     tabBarIcon: ({ focused, tintColor }) => {
-       return <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />;
-     },
-     tabBarLabel: 'Liste'
    }
  },
  Profil: {
@@ -149,6 +159,7 @@ const Navigator = createBottomTabNavigator({
 export default createSwitchNavigator({
   Auth: AuthNavigator,
   FirstLaunch: FirstLaunchNavigator,
+  FirstLaunchWithFacebook: FirstLaunchWithFacebookNavigator,
   MainApp: Navigator,
   List: ListNavigator,
   ProfilNav: ProfilNavigator

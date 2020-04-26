@@ -103,11 +103,11 @@ export default class AuthScreen extends React.Component {
           ];
           this.setDataToAsyncStorage(keys, values);
 
-          if (responseJson.user.firstlaunch == true){
-            this.props.navigation.navigate('FirstLaunch');
-          } else {
-            this.props.navigation.navigate('MainApp');
-          }
+          // if (responseJson.user.firstlaunch == true){
+            this.props.navigation.navigate('FirstLaunchWithFacebook');
+          // } else {
+            // this.props.navigation.navigate('MainApp');
+          // }
         })
         .catch((error) => {
           console.error(error);
@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
   container: {
     width: Dimensions.width,
     flex: 1,
-    backgroundColor: '#f5efef'
+    backgroundColor: '#f5efef',
+    marginTop: 20
   }
 });

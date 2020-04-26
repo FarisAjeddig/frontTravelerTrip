@@ -24,6 +24,12 @@ import * as Location from 'expo-location';
 import { MonoText } from '../components/StyledText';
 import Api from '../constants/Api';
 
+export const getCurrentLocation = () => {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(position => resolve(position), e => reject(e));
+  });
+};
+
 export default class MapScreen extends React.Component {
 
 
@@ -50,6 +56,18 @@ export default class MapScreen extends React.Component {
       }
     });
     this._getLocation();
+    return getCurrentLocation().then(position => {
+      if (position) {
+        this.setState({
+          location: {coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        });
+      }
+    });
   }
 
   _getLocation = async () => {
@@ -58,8 +76,10 @@ export default class MapScreen extends React.Component {
       // console.log('PERMISSION NOT GRANTED');
     }
     const location = await Location.getCurrentPositionAsync();
+    this.setState({ location: {coords: {latitude: location.coords.latitude, longitude: location.coords.longitude}} })
     this._getOtherUsers(location)
-    this.setState({ location, loading: false })
+    this.submitToAPI(location)
+    this.setState({loading: false})
   }
 
   // Calcul de la distance entre deux points. unit : 'K' pour kilometres, 'M' pour miles, 'N' pour Nautic
@@ -85,27 +105,32 @@ export default class MapScreen extends React.Component {
   	}
   }
 
-
   _getOtherUsers = async (location) => {
     return fetch( Api + "/api/geoloc/users/" + location.coords.longitude + "/" + location.coords.latitude + "/" + this.email)
       .then((response) => response.json())
       .then((responseJson) => {
         var result = [];
+        var i = 0;
+        var numberUsers = responseJson.users.length;
         for (let user of responseJson.users) {
-          console.log(user);
-          if (user.email !== this.email && (this.distance(this.state.location.coords.latitude, this.state.location.coords.longitude, user.lastLat, user.lastLong, 'K' < 20))) {
-            if (user.picture === undefined){
-              user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
-            } else if (!(user.picture.split(':')[0] === "https")){
-              user.picture =  Api + "/" + user.picture
+          fetch(Api + "/api/geoloc/common/" + user._id + "/" + this.email)
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson.common);
+            if (responseJson.common == 'true'){
+              if (user.picture === undefined){
+                user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
+              } else if (!(user.picture.split(':')[0] === "https")){
+                user.picture =  Api + "/" + user.picture
+              }
+              result.push(user);
             }
-            result.push(user);
-          }
+            i = i+1;
+            if (i == numberUsers){
+              this.setState({users: result})
+            }
+          })
         }
-
-        // result = responseJson.users
-
-        this.setState({users: result})
       })
       .catch((error) => {
         console.error(error);
@@ -137,6 +162,7 @@ export default class MapScreen extends React.Component {
           break;
         case 'SUCCESS':
           // ToastAndroid.show('Nouvelle position enregistrée.', ToastAndroid.SHORT);
+          // this.setState({ location: {coords: {latitude: location.coords.latitude, longitude: location.coords.longitude}} })
           break;
         default:
           ToastAndroid.show("Il y a eu une erreur.");
@@ -155,10 +181,14 @@ export default class MapScreen extends React.Component {
     this.mapView.animateToRegion(initialRegion, 2000);
   }
 
+  onRegionChange(region) {
+    this.setState({ location: {coords: { latitude : region.latitude, longitude: region.longitude}} });
+  }
+
   prevtime = Date.now()-12000;
 
   render() {
-    // if (!this.state.loading){
+    if (!this.state.loading){
       Location.watchPositionAsync({
         accuracy: Location.Accuracy.Balanced
       },
@@ -168,12 +198,13 @@ export default class MapScreen extends React.Component {
             // ToastAndroid.show('Nouvelle position récupérée.', ToastAndroid.SHORT);
             // Send new coords to back-end
             this.submitToAPI(location)
+            // Get others users actualized
             this._getOtherUsers(location)
+            this.setState({ location: {coords: {latitude: location.coords.latitude, longitude: location.coords.longitude}} })
           }
-          this.setState({location: this.state.location})
         }
       );
-    // }
+    }
 
     return (
       <View style={styles.container}>
@@ -182,15 +213,15 @@ export default class MapScreen extends React.Component {
           initialRegion={{
             latitude: this.state.location.coords.latitude,
             longitude: this.state.location.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
+            latitudeDelta: 10.922,
+            longitudeDelta: 10.421
           }}
           followUserLocation={true}
           paddingAdjustmentBehavior="automatic"
           liteMode={false}
           mapType="standard"
           showsUserLocation={true}
-          showsMyLocationButton={false}
+          showsMyLocationButton
           userLocationPriority="high"
           showsPointsOfInterest={false}
           showsCompass={true}
@@ -209,6 +240,8 @@ export default class MapScreen extends React.Component {
             },
             duration: 2000
           }}
+          region={this.state.location.coords}
+          // onRegionChangeComplete={e => this.setState({ location: {coords: e } })}
         >
         {this.state.users.map(user => (
           <MapView.Marker
@@ -230,6 +263,7 @@ export default class MapScreen extends React.Component {
           </MapView.Marker>
         ))}
         </MapView>
+
       </View>
     );
   }

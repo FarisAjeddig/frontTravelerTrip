@@ -157,7 +157,7 @@ export default class ProfileScreen extends React.Component {
 
 
   logout() {
-    let keys = [ 'email', 'id', 'name', 'interests', 'availability', 'firstlaunch', 'picture', 'position', 'enterprise'];
+    let keys = [ 'email', 'id', 'name', 'phone', 'interests', 'availability', 'firstlaunch', 'picture', 'position', 'enterprise'];
     AsyncStorage.multiRemove(keys, (err) => {
       this.props.navigation.navigate('Auth');
     });
@@ -167,7 +167,7 @@ export default class ProfileScreen extends React.Component {
     const loading = this.state.loading;
 
     return (
-      <ScrollView>
+      <ScrollView style={{marginTop: 20}}>
 
         <Overlay
           isVisible={this.state.isOverlayForPictureVisible}
@@ -191,7 +191,7 @@ export default class ProfileScreen extends React.Component {
         </Overlay>
 
         { loading ?
-            <ActivityIndicator size={100} color="#7bacbd" />
+            <ActivityIndicator size={100} color="#7bacbd" style={{marginTop: 20}} />
           :
           <View>
             <Avatar

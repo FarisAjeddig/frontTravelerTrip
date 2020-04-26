@@ -16,8 +16,10 @@ import {
   Alert,
   TouchableHighlight
 } from 'react-native';
-import {TextField} from 'react-native-material-textfield';
+import {TextField, OutlinedTextField} from 'react-native-material-textfield';
 import PasswordInputText from 'react-native-hide-show-password-input';
+import PhoneInput from 'react-native-phone-input'
+import CountryPicker from 'react-native-country-picker-modal';
 import Api from '../../constants/Api';
 
 
@@ -29,6 +31,7 @@ export default class RegisterScreen extends React.Component {
         this.name = "";
         this.position = "";
         this.enterprise = "";
+        this.phone = "";
         this.password = "";
         this.password2 = "";
 
@@ -61,6 +64,10 @@ export default class RegisterScreen extends React.Component {
 
     onEnterpriseChange(enterprise) {
       this.enterprise = enterprise
+    }
+
+    onPhoneChange(phone) {
+      this.phone = phone
     }
 
     onPassChange(pass) {
@@ -96,7 +103,6 @@ export default class RegisterScreen extends React.Component {
 
 
     submitToAPI() {
-      console.log('SubmitToAPI');
       let data = {
         method: 'POST',
         credentials: 'same-origin',
@@ -106,6 +112,7 @@ export default class RegisterScreen extends React.Component {
           name: this.name,
           position: this.position,
           enterprise: this.enterprise,
+          phone: this.phone,
           password: this.password,
           password2: this.password2
         }),
@@ -130,6 +137,7 @@ export default class RegisterScreen extends React.Component {
               'email',
               'id',
               'name',
+              'phone',
               'interests',
               'availability',
               'firstlaunch',
@@ -141,6 +149,7 @@ export default class RegisterScreen extends React.Component {
               this.email,
               responseJson.user._id,
               this.name,
+              this.phone,
               responseJson.user.interests,
               responseJson.user.availability,
               responseJson.user.firstlaunch.toString(),
@@ -242,6 +251,21 @@ export default class RegisterScreen extends React.Component {
                 placeholder="Macdonalds"
                 keyboardType='default'
               />
+
+              <TextField
+                label='Phone number'
+                placeholder="+33612345678"
+                keyboardType='phone-pad'
+                autoCapitalize="none"
+                autoCorrect={false}
+                textColor='black'
+                baseColor='black'
+                tintColor='black'
+                fontSize={20}
+                titleFontSize={17}
+                onChangeText={(phone) => this.onPhoneChange(phone)}
+                value={this.enterprise}
+              />
               <PasswordInputText
                   value={this.password}
                   iconColor='black'
@@ -292,6 +316,7 @@ const styles = StyleSheet.create({
   container: {
     width: Dimensions.width,
     flex: 1,
-    backgroundColor: '#f5efef'
+    backgroundColor: '#f5efef',
+    marginTop: 20
   }
 });

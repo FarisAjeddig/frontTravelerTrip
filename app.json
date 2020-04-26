@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Tab Navigation Template",
-    "slug": "frontTravelerTrip",
+    "name": "Business Traveler",
+    "slug": "BT",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [

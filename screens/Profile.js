@@ -34,6 +34,7 @@ export default class ProfileScreen extends React.Component {
     this.setState({loading: true})
     let keys = ['name', 'position', 'enterprise', 'id', 'picture'];
     AsyncStorage.multiGet(keys, (err, stores) => {
+      console.log(stores);
       stores.map((result, i, store) => {
       switch (store[i][0]) {
         case 'name':
@@ -49,6 +50,22 @@ export default class ProfileScreen extends React.Component {
           break;
         case 'id':
           this.setState({id : store[i][1]})
+          if (store[i][1] !== ""){
+            fetch(Api + '/api/profile/' + store[i][1] )
+            .then((res) => res.json())
+            .then((json) => {
+              this.setState({
+                name: json.user.name,
+                position: json.user.position,
+                enterprise: json.user.enterprise
+              })
+              this.setDataToAsyncStorage(["name"], [json.user.name])
+              this.setDataToAsyncStorage(["position"], [json.user.position])
+              this.setDataToAsyncStorage(["enterprise"], [json.user.enterprise])
+
+              console.log(json);
+            })
+          }
           break;
         case 'picture':
           if (store[i][1] !== null){
@@ -66,7 +83,22 @@ export default class ProfileScreen extends React.Component {
         this.setState({loading: false});
       })
     })
+    console.log("IF CHECK SI ON A TOUT RECUP");
+    if (this.state.name === "" || this.state.position === "Poste" || this.state.enterprise == "Entreprise"){
+      console.log("EMPTY TA MERE");
+      console.log(this.state.id);
+    }
   }
+
+  async setDataToAsyncStorage(keys, values){
+    for (let p=0; p<keys.length; p++){
+      console.log(keys[p]);
+      console.log(values[p]);
+      if (values[p] !== undefined){
+        await AsyncStorage.setItem(keys[p], values[p]);
+      }
+    }
+  };
 
 
   getPermissionAsync = async () => {
@@ -99,38 +131,39 @@ export default class ProfileScreen extends React.Component {
 
     if (response.cancelled){
       console.log("Le changement de photo a été annulé");
+      return;
     } else {
-
+      const photo = {
+        uri: response.uri,
+        name: this.state.id,
+        type: 'image/jpeg',
+      };
+      const data = new FormData();
+      data.append('file', photo);
+      const dataFetch = {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      };
+      return fetch(Api + "/api/upload", dataFetch)
+      .then(resp => resp.json())
+      .then(json => {
+        this.setState({uri: Api + "/" + json.picture})
+        try {
+          AsyncStorage.setItem('picture', Api + "/" + json.picture);
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch(err => console.log(err))
     }
 
     // if (!result.cancelled) {
     //   this.setState({ image: result.uri });
     // }
-    const photo = {
-      uri: response.uri,
-      name: this.state.id,
-      type: 'image/jpeg',
-    };
-    const data = new FormData();
-    data.append('file', photo);
-    const dataFetch = {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    };
-    return fetch(Api + "/api/upload", dataFetch)
-    .then(resp => resp.json())
-    .then(json => {
-      this.setState({uri: Api + "/" + json.picture})
-      try {
-        AsyncStorage.setItem('picture', Api + "/" + json.picture);
-      } catch (error) {
-        console.log(error);
-      }
-    })
-    .catch(err => console.log(err))
+
   };
 
   refreshFunction(_this){

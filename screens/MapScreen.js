@@ -42,7 +42,10 @@ export default class MapScreen extends React.Component {
     location: {
       coords: {
         latitude: 48.6253813,
-        longitude: 2.4440129
+        longitude: 2.4440129,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+
       }
     },
     users: [],

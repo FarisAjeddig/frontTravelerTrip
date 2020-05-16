@@ -44,11 +44,11 @@ export default class AuthScreen extends React.Component {
       AsyncStorage.getItem('email').then((value) => {
         if (value !== null){
           AsyncStorage.getItem('firstlaunch').then((value) => {
-            if (value){
-              this.props.navigation.navigate('FirstLaunch');
-            } else {
-              this.props.navigation.navigate('MainApp');
-            }
+            // if (value){
+              // this.props.navigation.navigate('FirstLaunch');
+            // } else {
+              // this.props.navigation.navigate('MainApp');
+            // }
           })
         }
       });
@@ -63,12 +63,13 @@ export default class AuthScreen extends React.Component {
           behavior: 'native'
         });
 
+
         let data = {
           method: 'POST',
           credentials: 'same-origin',
           mode: 'same-origin',
           body: JSON.stringify({
-            token: token,
+            token: token
           }),
           headers: {
             'Accept': 'application/json',
@@ -76,9 +77,12 @@ export default class AuthScreen extends React.Component {
           }
         };
 
+        console.log("BEFORE FETCH");
         return fetch( Api + '/api/sign/facebook', data)
-        .then((response) => response.json())
-        .then((responseJson) => {
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          console.log("BEFORE KEYVALUE");
           let keys = [
             'email',
             'id',
@@ -91,25 +95,29 @@ export default class AuthScreen extends React.Component {
             'enterprise'
           ];
           let values = [
-            responseJson.user.email,
-            responseJson.user._id,
-            responseJson.user.name,
-            responseJson.user.interests,
-            responseJson.user.availability,
-            responseJson.user.firstlaunch.toString(),
-            responseJson.user.picture,
-            responseJson.user.position,
-            responseJson.user.enterprise
+            json.user.email,
+            json.user._id,
+            json.user.name,
+            json.user.interests,
+            json.user.availability,
+            json.user.firstlaunch.toString(),
+            json.user.picture,
+            json.user.position,
+            json.user.enterprise
           ];
+          // console.log(values);
+          // console.log(json);
           this.setDataToAsyncStorage(keys, values);
-
-          // if (responseJson.user.firstlaunch == true){
+          //
+          // console.log("BEFORE NAVIGATE");
+          if (json.user.firstlaunch == true){
             this.props.navigation.navigate('FirstLaunchWithFacebook');
-          // } else {
-            // this.props.navigation.navigate('MainApp');
-          // }
+          } else {
+            this.props.navigation.navigate('MainApp');
+          }
         })
         .catch((error) => {
+          console.log(error);
           console.error(error);
         });
       } catch ({ message }) {
@@ -119,7 +127,11 @@ export default class AuthScreen extends React.Component {
 
     async setDataToAsyncStorage(keys, values){
       for (let p=0; p<keys.length; p++){
-        AsyncStorage.setItem(keys[p], values[p]);
+        console.log(keys[p]);
+        console.log(values[p]);
+        if (values[p] !== undefined){
+          await AsyncStorage.setItem(keys[p], values[p]);
+        }
       }
     };
 

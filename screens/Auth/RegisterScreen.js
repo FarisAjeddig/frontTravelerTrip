@@ -296,7 +296,7 @@ export default class RegisterScreen extends React.Component {
                   onChangeText={(password) => this.onPass2Change(password)}
               />
               <TouchableOpacity
-                style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, width: "100%"}}
+                style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, marginBottom: 200, width: "100%"}}
                 onPress={() => this.submit()}>
                 <View style={{justifyContent:'center'}}>
                   <Text style={{justifyContent:'center',color: 'white',padding: 20,fontSize: 18}}>Inscription</Text>

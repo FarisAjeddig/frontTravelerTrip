@@ -127,7 +127,7 @@ const Navigator = createBottomTabNavigator({
    screen: HomeNavigator,
    navigationOptions: {
      tabBarIcon: ({ focused, tintColor }) => (
-       <TabBarIcon focused={focused} name={ Platform.OS === 'ios' ? `ios-map${focused ? '' : '-outline'}` : 'md-map' } />
+       <TabBarIcon focused={focused} name={ Platform.OS === 'ios' ? `${focused ? 'ios-map' : 'md-map'}` : 'md-map' } />
      ),
      tabBarLabel: 'Carte'
    }

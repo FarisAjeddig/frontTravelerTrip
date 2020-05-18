@@ -46,7 +46,9 @@ export default class RegisterScreen extends React.Component {
 
     async setDataToAsyncStorage(keys, values){
       for (let p=0; p<keys.length; p++){
-        AsyncStorage.setItem(keys[p], values[p]);
+        if (values[p] !== undefined){
+          await AsyncStorage.setItem(keys[p], values[p]);
+        }
       }
     };
 
@@ -128,7 +130,7 @@ export default class RegisterScreen extends React.Component {
         console.log(responseJson);
         switch (responseJson.statut) {
           case 'ERROR':
-            this.setState({messageError: responseJson.message});
+            this.setState({messageError: responseJson.errors});
             this.setState({modalVisible: true});
             break;
           case 'SUCCESS':

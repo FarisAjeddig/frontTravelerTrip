@@ -127,8 +127,6 @@ export default class AuthScreen extends React.Component {
 
     async setDataToAsyncStorage(keys, values){
       for (let p=0; p<keys.length; p++){
-        console.log(keys[p]);
-        console.log(values[p]);
         if (values[p] !== undefined){
           await AsyncStorage.setItem(keys[p], values[p]);
         }

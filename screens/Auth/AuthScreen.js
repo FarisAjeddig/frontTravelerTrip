@@ -104,10 +104,14 @@ export default class AuthScreen extends React.Component {
           this.setDataToAsyncStorage(keys, values);
 
           // if (responseJson.user.firstlaunch == true){
+          if (responseJson.user.firstlaunch == true){
             this.props.navigation.navigate('FirstLaunchWithFacebook');
           // } else {
             // this.props.navigation.navigate('MainApp');
           // }
+          } else {
+            this.props.navigation.navigate('MainApp');
+          }
         })
         .catch((error) => {
           console.error(error);

@@ -37,7 +37,9 @@ export default class ProfileScreen extends React.Component {
       stores.map((result, i, store) => {
       switch (store[i][0]) {
         case 'name':
-          this.setState({name: store[i][1]})
+          if (store[i][1] !== ""){
+            this.setState({name: store[i][1]})            
+          }
           let initials = store[i][1].split(" ").map((n)=>n[0]).join("");
           this.setState({initials: initials})
           break;

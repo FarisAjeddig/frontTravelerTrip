@@ -59,8 +59,8 @@ export default class FirstLaunchScreen extends React.Component {
         this.email = value;
       })
       AsyncStorage.getItem('firstlaunch').then((value) => {
-        if (value !== 'true'){
-          this.props.navigation.navigate('MainApp');
+        if (value === 'false'){
+        //  this.props.navigation.navigate('MainApp');
         } else {
           try {
             AsyncStorage.setItem('firstlaunch', 'false');
@@ -71,9 +71,12 @@ export default class FirstLaunchScreen extends React.Component {
       });
     }
 
+
     async setDataToAsyncStorage(keys, values){
       for (let p=0; p<keys.length; p++){
-        AsyncStorage.setItem(keys[p], values[p]);
+        if (values[p] !== undefined){
+          await AsyncStorage.setItem(keys[p], values[p]);
+        }
       }
     };
 

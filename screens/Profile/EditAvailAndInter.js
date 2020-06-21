@@ -119,7 +119,7 @@ export default class EditAvailAndInter extends React.Component {
 
         <View style={{margin: 20}}>
           {/* Interests  */}
-          <Text style={{fontSize: 25, color: 'blue', marginTop: 0}}>Vos centres d'intérêts</Text>
+          <Text style={{fontSize: 25, color: 'blue', marginTop: 0}}>Your interests</Text>
           <View style={{ flex: 1, marginBottom: 20, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, margin: -12}}>
             <View style={{flex: 1, flexDirection: 'column'}}>
 
@@ -179,25 +179,25 @@ export default class EditAvailAndInter extends React.Component {
           </View>
 
           {/* Availabilities  */}
-          <Text style={{fontSize: 25, color: 'red'}}>Vos disponibilités</Text>
+          <Text style={{fontSize: 25, color: 'red'}}>Your availability</Text>
           <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, marginBottom: 20, margin: -12}}>
             <View style={{flex: 1, flexDirection: 'column'}}>
 
               <CheckBox
                 center
-                title='6h à 8h'
+                title='6am to 8am'
                 onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a6to8: !this.state.checkedAvailabilities.a6to8} }); }}
                 checked={this.state.checkedAvailabilities.a6to8}
               />
               <CheckBox
                 center
-                title='8h à 12h'
+                title='8am to 12pm'
                 onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a8to12: !this.state.checkedAvailabilities.a8to12} }); }}
                 checked={this.state.checkedAvailabilities.a8to12}
               />
               <CheckBox
                 center
-                title='12h à 14h'
+                title='12pm to 2pm'
                 onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a12to14: !this.state.checkedAvailabilities.a12to14} }); }}
                 checked={this.state.checkedAvailabilities.a12to14}
               />
@@ -207,13 +207,13 @@ export default class EditAvailAndInter extends React.Component {
 
               <CheckBox
                 center
-                title='14h à 18h'
+                title='2pm to 6pm'
                 onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a14to18: !this.state.checkedAvailabilities.a14to18} }); }}
                 checked={this.state.checkedAvailabilities.a14to18}
               />
               <CheckBox
                 center
-                title='18h à 22h'
+                title='6pm to 10pm'
                 onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a18to22: !this.state.checkedAvailabilities.a18to22} }); }}
                 checked={this.state.checkedAvailabilities.a18to22}
               />
@@ -230,7 +230,7 @@ export default class EditAvailAndInter extends React.Component {
             raised
             // icon={{name: 'send'}}
             loading={this.state.loading}
-            title='MODIFIER'
+            title='EDIT'
             onPress={() => this.submit()} />
 
         </View>

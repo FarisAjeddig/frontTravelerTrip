@@ -38,7 +38,7 @@ export default class ContactUs extends React.Component {
   submit(){
     this.setState({loading: true});
     if (this.message == "") {
-      Alert.alert("Votre message est vide.")
+      Alert.alert("Your message is empty.")
       this.setState({loading: false})
     } else {
       let data = {
@@ -64,11 +64,11 @@ export default class ContactUs extends React.Component {
             this.setState({modalVisible: true});
             break;
           case 'SUCCESS':
-            Alert.alert("Votre message a bien été envoyé, on vous recontacte sur les coordonnées associées à votre compte rapidement !")
+            Alert.alert("Your message has been sent, we will get back to you with the details associated with your account quickly!")
             this.props.navigation.navigate('Profil');
             break;
           default:
-            Alert.alert("Réessayez, il y a eu une erreur.")
+            Alert.alert("Try again, there was an error.")
             break;
           }
         })
@@ -81,11 +81,11 @@ export default class ContactUs extends React.Component {
   render () {
     return (
       <ScrollView style={styles.container}>
-        <Text style={{textAlign: 'center', fontSize: 20, marginBottom: 30}}>Nous contacter</Text>
+        <Text style={{textAlign: 'center', fontSize: 20, marginBottom: 30}}>Contact us</Text>
         <TextInput
           style={styles.TextInputStyleClass}
           underlineColorAndroid="transparent"
-          placeholder={"Votre message"}
+          placeholder={"How can we help you ?"}
           placeholderTextColor={"#9E9E9E"}
           numberOfLines={10}
           multiline={true}
@@ -93,7 +93,7 @@ export default class ContactUs extends React.Component {
         />
         <View style={{marginTop: 50}} />
         <Button
-          title="Envoyer"
+          title="Send"
           onPress={() => {this.submit()}}
           loading={this.state.loading}
         />

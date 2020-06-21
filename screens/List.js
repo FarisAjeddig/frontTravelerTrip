@@ -13,6 +13,12 @@ import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import Api from '../constants/Api';
 
+export const getCurrentLocation = () => {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(position => resolve(position), e => reject(e));
+  });
+};
+
 export default class ListScreen extends React.Component {
 
   constructor(props) {
@@ -31,7 +37,25 @@ export default class ListScreen extends React.Component {
         this.email = value;
       }
     });
+
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this._getLocation();
+    });
+
     this._getLocation();
+    return getCurrentLocation().then(position => {
+      if (position) {
+        this.setState({
+          location: {coords: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        });
+      }
+    });
   }
 
   _getLocation = async () => {
@@ -50,7 +74,6 @@ export default class ListScreen extends React.Component {
           fetch(Api + "/api/geoloc/common/" + user._id + "/" + this.email)
           .then((response) => response.json())
           .then((responseJson) => {
-            console.log(responseJson.common);
             if (responseJson.common == 'true'){
               if (user.picture === undefined){
                 user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
@@ -75,7 +98,7 @@ export default class ListScreen extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Liste</Text>
+        <Text style={styles.title}>List</Text>
         {this.state.loading  ?
           <ActivityIndicator size={100} color="#7bacbd" />
           :
@@ -86,14 +109,14 @@ export default class ListScreen extends React.Component {
             }}
             key={user._id}
             title={user.name}
-            subtitle={user.position + " chez " + user.enterprise}
+            subtitle={user.position + " at " + user.enterprise}
             chevron
             onPress={() => {this.props.navigation.navigate('UserProfile', {'user': user})}}
           />
         )
       }
       {this.state.users.length === 0  && this.state.loading === false ?
-        <Text style={{marginTop: 30, fontSize: 16, textAlign: 'center'}}>Pas de correspondance pour le moment. Réessayez plus tard</Text> :
+        <Text style={{marginTop: 30, fontSize: 16, textAlign: 'center'}}>No match at the moment. Try again later.</Text> :
       <Text></Text>}
       </View>
     );

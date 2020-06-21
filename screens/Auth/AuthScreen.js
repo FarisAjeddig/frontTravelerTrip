@@ -44,11 +44,11 @@ export default class AuthScreen extends React.Component {
       AsyncStorage.getItem('email').then((value) => {
         if (value !== null){
           AsyncStorage.getItem('firstlaunch').then((value) => {
-            // if (value){
-              // this.props.navigation.navigate('FirstLaunch');
-            // } else {
-              // this.props.navigation.navigate('MainApp');
-            // }
+            if (value){
+              this.props.navigation.navigate('FirstLaunch');
+            } else {
+              this.props.navigation.navigate('MainApp');
+            }
           })
         }
       });
@@ -77,12 +77,9 @@ export default class AuthScreen extends React.Component {
           }
         };
 
-        console.log("BEFORE FETCH");
         return fetch( Api + '/api/sign/facebook', data)
         .then((res) => res.json())
         .then((json) => {
-          console.log(json);
-          console.log("BEFORE KEYVALUE");
           let keys = [
             'email',
             'id',
@@ -105,11 +102,7 @@ export default class AuthScreen extends React.Component {
             json.user.position,
             json.user.enterprise
           ];
-          // console.log(values);
-          // console.log(json);
           this.setDataToAsyncStorage(keys, values);
-          //
-          // console.log("BEFORE NAVIGATE");
           if (json.user.firstlaunch == true){
             this.props.navigation.navigate('FirstLaunchWithFacebook');
           } else {
@@ -144,10 +137,10 @@ export default class AuthScreen extends React.Component {
     submit() {
       let error = "";
       if (this.email === "") {
-          error += "Adresse mail manquante\n"
+          error += "Missing email address\n"
       }
       if (this.password === "") {
-          error += "Mot de passe manquant\n";
+          error += "Missing password\n";
       }
       if (error === "") {
           return (this.submitToAPI());
@@ -215,7 +208,7 @@ export default class AuthScreen extends React.Component {
             }
             break;
           default:
-            this.setState({messageError: "Réessayez, il y a eu une erreur."});
+            this.setState({messageError: "Try again, there was an error."});
             this.setState({modalVisible: true});
             break;
           }
@@ -241,12 +234,12 @@ export default class AuthScreen extends React.Component {
               }>
               <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', paddingLeft: 60, paddingRight: 60 }}>
                 <View style={{backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', paddingTop: 20, paddingBottom: 20, paddingRight: 10, paddingLeft: 10}}>
-                  <Text style={{fontSize:20, fontWeight: 'bold'}}>Erreur</Text>
+                  <Text style={{fontSize:20, fontWeight: 'bold'}}>Error</Text>
                   <Text>{this.state.messageError}</Text>
                   <TouchableHighlight
                     style={{backgroundColor: "#0011af", alignSelf: 'stretch', marginRight: 20, marginLeft: 20}}
                     onPress={() => this.setState({modalVisible: false})}>
-                    <Text style={{textAlign: 'center', color: 'white', paddingTop: 15, paddingBottom: 15}}>Fermer</Text>
+                    <Text style={{textAlign: 'center', color: 'white', paddingTop: 15, paddingBottom: 15}}>Close</Text>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -254,7 +247,7 @@ export default class AuthScreen extends React.Component {
 
             <View style={{margin: 20}}>
               <TextField
-                label="Identifiant"
+                label="E-mail"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -272,7 +265,7 @@ export default class AuthScreen extends React.Component {
                   iconColor='black'
                   autoCapitalize="none"
                   autoCorrect={false}
-                  label="Mot de passe"
+                  label="Password"
                   fontSize={20}
                   titleFontSize={17}
                   textColor='black'
@@ -285,7 +278,7 @@ export default class AuthScreen extends React.Component {
                 style={{backgroundColor: 'red',borderRadius: 2,alignSelf: 'center',marginTop: 20, width: "100%"}}
                 onPress={() => this.submit()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',padding: 20, color: 'white', textAlign: 'center'}}>Connexion</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20, color: 'white', textAlign: 'center'}}>Sign in</Text>
                 </View>
               </TouchableOpacity>
 
@@ -293,7 +286,7 @@ export default class AuthScreen extends React.Component {
                 style={{alignItems: 'center', paddingTop: 60}}
                 onPress={() => this.loginWithFacebook()}>
                 <View style={{borderRadius: 4, padding: 15, backgroundColor: '#3b5998', width: "100%"}}>
-                  <Text style={{color: 'white', textAlign: 'center'}}>Continuer avec Facebook</Text>
+                  <Text style={{color: 'white', textAlign: 'center'}}>Continue with Facebook</Text>
                 </View>
               </TouchableOpacity>
 
@@ -301,7 +294,7 @@ export default class AuthScreen extends React.Component {
                 style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, width: "100%"}}
                 onPress={() => this._goInscription()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',padding: 20,marginLeft: 50,marginRight: 50, color: 'white'}}>Inscription</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20,marginLeft: 50,marginRight: 50, color: 'white'}}>Sign up</Text>
                 </View>
               </TouchableOpacity>
             </View>

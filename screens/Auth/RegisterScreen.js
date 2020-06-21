@@ -81,17 +81,16 @@ export default class RegisterScreen extends React.Component {
     }
 
     submit() {
-      console.log("SUBMIT");
       let error = "";
       if (this.email === "") {
-          error += "Adresse mail manquante\n"
+          error += "Missing email address\n"
       }
       if (this.password === "" || this.password2 === "") {
-          error += "Mot de passe manquant\n";
+          error += "Missing password\n";
       }
 
       if (this.password !== this.password2){
-        error+="Les deux mots de passe ne correspondent pas\n";
+        error+="The two passwords do not match\n";
       }
       if (error === "") {
           return (this.submitToAPI());
@@ -160,11 +159,11 @@ export default class RegisterScreen extends React.Component {
               this.enterprise
             ];
             this.setDataToAsyncStorage(keys, values);
-            Alert.alert('Votre compte a bien été créé !')
+            Alert.alert('Your account has been created !')
             this.props.navigation.navigate('FirstLaunch');
             break;
           default:
-            this.setState({messageError: "Réessayez, il y a eu une erreur."});
+            this.setState({messageError: "Try again, there was an error."});
             this.setState({modalVisible: true});
             break;
           }
@@ -186,19 +185,19 @@ export default class RegisterScreen extends React.Component {
               }>
               <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', paddingLeft: 60, paddingRight: 60 }}>
                 <View style={{backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', paddingTop: 20, paddingBottom: 20, paddingRight: 10, paddingLeft: 10}}>
-                  <Text style={{fontSize:20, fontWeight: 'bold'}}>Erreur</Text>
+                  <Text style={{fontSize:20, fontWeight: 'bold'}}>Error</Text>
                   <Text>{this.state.messageError}</Text>
                   <TouchableHighlight
                     style={{backgroundColor: "#0011af", alignSelf: 'stretch', marginRight: 20, marginLeft: 20}}
                     onPress={() => this.setState({modalVisible: false})}>
-                    <Text style={{textAlign: 'center', color: 'white', paddingTop: 15, paddingBottom: 15}}>Fermer</Text>
+                    <Text style={{textAlign: 'center', color: 'white', paddingTop: 15, paddingBottom: 15}}>Close</Text>
                   </TouchableHighlight>
                 </View>
               </View>
             </Modal>
             <View style={{margin: 20}}>
               <TextField
-                label="Email"
+                label="E-mail"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -212,7 +211,7 @@ export default class RegisterScreen extends React.Component {
                 keyboardType='email-address'
               />
               <TextField
-                label="Nom et prénom"
+                label="Last and first name"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -226,7 +225,7 @@ export default class RegisterScreen extends React.Component {
                 keyboardType='default'
               />
               <TextField
-                label="Poste"
+                label="Position"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -236,11 +235,11 @@ export default class RegisterScreen extends React.Component {
                 titleFontSize={17}
                 onChangeText={(position) => this.onPostChange(position)}
                 value={this.position}
-                placeholder="Directeur des achats"
+                placeholder="Sales director"
                 keyboardType='default'
               />
               <TextField
-                label="Entreprise"
+                label="Enterprise"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -250,7 +249,7 @@ export default class RegisterScreen extends React.Component {
                 titleFontSize={17}
                 onChangeText={(enterprise) => this.onEnterpriseChange(enterprise)}
                 value={this.enterprise}
-                placeholder="Macdonalds"
+                placeholder="McDonald's"
                 keyboardType='default'
               />
 
@@ -273,7 +272,7 @@ export default class RegisterScreen extends React.Component {
                   iconColor='black'
                   autoCapitalize="none"
                   autoCorrect={false}
-                  label="Mot de passe"
+                  label="Password"
                   fontSize={20}
                   titleFontSize={17}
                   textColor='black'
@@ -288,7 +287,7 @@ export default class RegisterScreen extends React.Component {
                   iconColor='black'
                   autoCapitalize="none"
                   autoCorrect={false}
-                  label="Confirmer le mot de passe"
+                  label="Confirm password"
                   fontSize={20}
                   titleFontSize={17}
                   textColor='black'
@@ -301,7 +300,7 @@ export default class RegisterScreen extends React.Component {
                 style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, marginBottom: 200, width: "100%"}}
                 onPress={() => this.submit()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',padding: 20,fontSize: 18}}>Inscription</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20,fontSize: 18}}>Sign up</Text>
                 </View>
               </TouchableOpacity>
             </View>

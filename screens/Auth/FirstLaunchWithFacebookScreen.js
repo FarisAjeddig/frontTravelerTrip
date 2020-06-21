@@ -155,14 +155,12 @@ export default class FirstLaunchScreen extends React.Component {
       return fetch( Api + '/api/update/facebook', data)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
         switch (responseJson.statut) {
           case 'ERROR':
             this.setState({messageError: responseJson.message});
             this.setState({modalVisible: true});
             break;
           case 'SUCCESS':
-            console.log(responseJson.user);
             let keys = [
               'email',
               'id',
@@ -191,7 +189,7 @@ export default class FirstLaunchScreen extends React.Component {
             this.props.navigation.navigate('MainApp');
             break;
           default:
-            this.setState({messageError: "Réessayez, il y a eu une erreur."});
+            this.setState({messageError: "Try again, there was an error"});
             this.setState({modalVisible: true});
             break;
           }
@@ -213,22 +211,22 @@ export default class FirstLaunchScreen extends React.Component {
               }>
               <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', paddingLeft: 60, paddingRight: 60 }}>
                 <View style={{backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', paddingTop: 20, paddingBottom: 20, paddingRight: 10, paddingLeft: 10}}>
-                  <Text style={{fontSize:20, fontWeight: 'bold'}}>Erreur</Text>
+                  <Text style={{fontSize:20, fontWeight: 'bold'}}>Error</Text>
                   <Text>{this.state.messageError}</Text>
                   <TouchableHighlight
                     style={{backgroundColor: "#0011af", alignSelf: 'stretch', marginRight: 20, marginLeft: 20}}
                     onPress={() => this.setState({modalVisible: false})}>
-                    <Text style={{textAlign: 'center', color: 'white', paddingTop: 15, paddingBottom: 15}}>Fermer</Text>
+                    <Text style={{textAlign: 'center', color: 'white', paddingTop: 15, paddingBottom: 15}}>Close</Text>
                   </TouchableHighlight>
                 </View>
               </View>
             </Modal>
 
             <View style={{margin: 20}}>
-              <Text style={{fontSize: 25, color: 'red'}}>Dites nous en plus !</Text>
+              <Text style={{fontSize: 25, color: 'red'}}>Tess us more !</Text>
 
               <TextField
-                label="Poste"
+                label="Position"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -238,11 +236,11 @@ export default class FirstLaunchScreen extends React.Component {
                 titleFontSize={17}
                 onChangeText={(position) => this.onPostChange(position)}
                 value={this.position}
-                placeholder="Directeur des achats"
+                placeholder="Sales director"
                 keyboardType='default'
               />
               <TextField
-                label="Entreprise"
+                label="Enterprise"
                 autoCapitalize="none"
                 autoCorrect={false}
                 textColor='black'
@@ -252,7 +250,7 @@ export default class FirstLaunchScreen extends React.Component {
                 titleFontSize={17}
                 onChangeText={(enterprise) => this.onEnterpriseChange(enterprise)}
                 value={this.enterprise}
-                placeholder="Macdonalds"
+                placeholder="McDonald's"
                 keyboardType='default'
               />
 
@@ -271,7 +269,7 @@ export default class FirstLaunchScreen extends React.Component {
                 value={this.enterprise}
               />
 
-              <Text>Ces données nous permettront de vous proposer des personnes avec lesquels vous "matchez" :)</Text>
+              <Text>This data will allow us to offer you people with whom you "match" :)</Text>
 
               {/* Interests  */}
               <Text style={{marginTop: 10}}>Les sujets sur lesquelles vous souhaiteriez échanger</Text>
@@ -333,25 +331,25 @@ export default class FirstLaunchScreen extends React.Component {
                 </View>
               </View>
               {/* Availabilities  */}
-              <Text>Quand êtes vous disponible pour rencontrer d'autres voyageurs d'affaire ?</Text>
+              <Text>When are you available to meet other business travelers?</Text>
               <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'rgb(235, 240, 237)', borderRadius: 10, marginTop: 20, padding: 10, marginBottom: 20, margin: -12}}>
                 <View style={{flex: 1, flexDirection: 'column'}}>
 
                   <CheckBox
                     center
-                    title='6h à 8h'
+                    title='6am to 8am'
                     onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a6to8: !this.state.checkedAvailabilities.a6to8} }); }}
                     checked={this.state.checkedAvailabilities.a6to8}
                   />
                   <CheckBox
                     center
-                    title='8h à 12h'
+                    title='8am to 12pm'
                     onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a8to12: !this.state.checkedAvailabilities.a8to12} }); }}
                     checked={this.state.checkedAvailabilities.a8to12}
                   />
                   <CheckBox
                     center
-                    title='12h à 14h'
+                    title='12pm to 2pm'
                     onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a12to14: !this.state.checkedAvailabilities.a12to14} }); }}
                     checked={this.state.checkedAvailabilities.a12to14}
                   />
@@ -361,13 +359,13 @@ export default class FirstLaunchScreen extends React.Component {
 
                   <CheckBox
                     center
-                    title='14h à 18h'
+                    title='2pm to 6pm'
                     onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a14to18: !this.state.checkedAvailabilities.a14to18} }); }}
                     checked={this.state.checkedAvailabilities.a14to18}
                   />
                   <CheckBox
                     center
-                    title='18h à 22h'
+                    title='6pm to 10pm'
                     onPress={() => { this.setState({ checkedAvailabilities: {...this.state.checkedAvailabilities, a18to22: !this.state.checkedAvailabilities.a18to22} }); }}
                     checked={this.state.checkedAvailabilities.a18to22}
                   />
@@ -385,7 +383,7 @@ export default class FirstLaunchScreen extends React.Component {
                 raised
                 icon={{name: 'send'}}
                 loading={this.state.loading}
-                title='ENVOYER'
+                title='SEND'
                 onPress={() => this.submit()} />
 
             </View>

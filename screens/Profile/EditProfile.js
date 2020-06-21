@@ -18,9 +18,9 @@ export default class EditProfile extends React.Component {
   }
 
   state = {
-    name: "nom",
-    position: "poste",
-    enterprise: "entreprise",
+    name: "name",
+    position: "position",
+    enterprise: "enterprise",
     id: ""
   }
 
@@ -68,7 +68,7 @@ export default class EditProfile extends React.Component {
 
   _submit(){
     if (this.state.name === "" || this.state.position === "" || this.state.enterprise === "" || this.state.position === null || this.state.enterprise === null){
-      Alert.alert('Remplissez tous les champs svp');
+      Alert.alert('Please fill in all fields');
     } else {
       let data = {
         method: 'POST',
@@ -114,7 +114,7 @@ export default class EditProfile extends React.Component {
       <ScrollView style={styles.container}>
         <View style={styles.input} >
           <Input
-            placeholder='Nom et prénom'
+            placeholder='Last and first name'
             leftIcon={
               <Icon
                 name='user'
@@ -124,13 +124,13 @@ export default class EditProfile extends React.Component {
               />
             }
             onChangeText={(text) => {this._OnNameChange(text)}}
-            label="Nom et prénom"
+            label="Last and first name"
             value={this.state.name}
           />
         </View>
         <View style={styles.input} >
           <Input
-            placeholder='Poste'
+            placeholder='Position'
             leftIcon={
               <Icon
                 name='address-card'
@@ -140,13 +140,13 @@ export default class EditProfile extends React.Component {
               />
             }
             onChangeText={(text) => {this._OnPostChange(text)}}
-            label="Poste"
+            label="Position"
             value={this.state.position}
           />
         </View>
         <View style={styles.input}>
           <Input
-            placeholder='Entreprise'
+            placeholder='Enterprise'
             leftIcon={
               <Icon
                 name='building'
@@ -156,13 +156,13 @@ export default class EditProfile extends React.Component {
               />
             }
             onChangeText={(text) => {this._OnEnterpriseChange(text)}}
-            label="Entreprise"
+            label="Enterprise"
             value={this.state.enterprise}
           />
         </View>
         <View style={{marginTop: 30 }} />
         <Button
-          title="MODIFIER"
+          title="EDIT"
           onPress={() => {this._submit()}}
         />
 

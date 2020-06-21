@@ -41,8 +41,8 @@ export default class MapScreen extends React.Component {
   state = {
     location: {
       coords: {
-        latitude: 48.6253813,
-        longitude: 2.4440129,
+        latitude: 55.6253813,
+        longitude: 28.4440129,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
 
@@ -59,6 +59,12 @@ export default class MapScreen extends React.Component {
       }
     });
     this._getLocation();
+
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener("didFocus", () => {
+      this._getLocation();
+    });
+
     return getCurrentLocation().then(position => {
       if (position) {
         this.setState({
@@ -119,7 +125,6 @@ export default class MapScreen extends React.Component {
           fetch(Api + "/api/geoloc/common/" + user._id + "/" + this.email)
           .then((response) => response.json())
           .then((responseJson) => {
-            console.log(responseJson.common);
             if (responseJson.common == 'true'){
               if (user.picture === undefined){
                 user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
@@ -243,7 +248,11 @@ export default class MapScreen extends React.Component {
             },
             duration: 2000
           }}
-          region={this.state.location.coords}
+          region={{
+            latitude: this.state.location.coords.latitude,
+            longitude: this.state.location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421}}
           // onRegionChangeComplete={e => this.setState({ location: {coords: e } })}
         >
         {this.state.users.map(user => (

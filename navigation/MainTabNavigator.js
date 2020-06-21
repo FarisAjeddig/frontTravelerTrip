@@ -95,19 +95,19 @@ const ProfilNavigator = createStackNavigator({
  EditProfile: {
    screen: EditProfile,
    navigationOptions: {
-     title: "Modifier ses informations"
+     title: "Edit my information"
    }
  },
  EditAvailAndInter: {
    screen: EditAvailAndInter,
    navigationOptions: {
-     title: "Disponibilités et intérêts"
+     title: "Availability and interest"
    }
  },
  ContactUs: {
    screen: ContactUs,
    navigationOptions: {
-     title: "Contactez-nous"
+     title: "Contact us"
    }
  }
 });
@@ -120,7 +120,7 @@ const Navigator = createBottomTabNavigator({
       tabBarIcon: ({ focused, tintColor }) => {
         return <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />;
       },
-      tabBarLabel: 'Liste'
+      tabBarLabel: 'List'
     }
   },
  MainHome: {
@@ -129,7 +129,7 @@ const Navigator = createBottomTabNavigator({
      tabBarIcon: ({ focused, tintColor }) => (
        <TabBarIcon focused={focused} name={ Platform.OS === 'ios' ? `${focused ? 'ios-map' : 'md-map'}` : 'md-map' } />
      ),
-     tabBarLabel: 'Carte'
+     tabBarLabel: 'Card'
    }
  },
  Profil: {
@@ -140,7 +140,7 @@ const Navigator = createBottomTabNavigator({
        return <Ionicons name={iconName} size={25} color={tintColor} />;
      },
      tabBarVisible: true,
-     tabBarLabel: 'Mon profil'
+     tabBarLabel: 'Profile'
    }
  }
 },

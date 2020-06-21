@@ -14,7 +14,7 @@ import Api from '../constants/Api';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import { Avatar, ListItem, Overlay, Icon } from 'react-native-elements';
+import { Avatar, ListItem, Overlay, Icon, CheckBox, Divider } from 'react-native-elements';
 
 
 export default class ProfileScreen extends React.Component {
@@ -27,6 +27,8 @@ export default class ProfileScreen extends React.Component {
     id: "",
     position: "Poste",
     enterprise: "Entreprise",
+    isAuthorizedPhoneAccess: false,
+    isAuthorizedEmailAccess: false,
     loading: true
   }
 
@@ -34,12 +36,11 @@ export default class ProfileScreen extends React.Component {
     this.setState({loading: true})
     let keys = ['name', 'position', 'enterprise', 'id', 'picture'];
     AsyncStorage.multiGet(keys, (err, stores) => {
-      console.log(stores);
       stores.map((result, i, store) => {
       switch (store[i][0]) {
         case 'name':
           if (store[i][1] !== ""){
-            this.setState({name: store[i][1]})            
+            this.setState({name: store[i][1]})
           }
           let initials = store[i][1].split(" ").map((n)=>n[0]).join("");
           this.setState({initials: initials})
@@ -59,13 +60,13 @@ export default class ProfileScreen extends React.Component {
               this.setState({
                 name: json.user.name,
                 position: json.user.position,
-                enterprise: json.user.enterprise
+                enterprise: json.user.enterprise,
+                isAuthorizedEmailAccess: json.user.authorizationForPrintingEmail,
+                isAuthorizedPhoneAccess: json.user.authorizationForPrintingPhone
               })
               this.setDataToAsyncStorage(["name"], [json.user.name])
               this.setDataToAsyncStorage(["position"], [json.user.position])
               this.setDataToAsyncStorage(["enterprise"], [json.user.enterprise])
-
-              console.log(json);
             })
           }
           break;
@@ -75,7 +76,6 @@ export default class ProfileScreen extends React.Component {
               this.setState({uri : store[i][1]})
             } else {
               this.setState({uri : Api + "/" + store[i][1]})
-              console.log(store[i][1].split(':')[0]);
             }
           }
           break;
@@ -85,7 +85,6 @@ export default class ProfileScreen extends React.Component {
         this.setState({loading: false});
       })
     })
-    console.log("IF CHECK SI ON A TOUT RECUP");
     if (this.state.name === "" || this.state.position === "Poste" || this.state.enterprise == "Entreprise"){
       console.log("EMPTY TA MERE");
       console.log(this.state.id);
@@ -94,8 +93,6 @@ export default class ProfileScreen extends React.Component {
 
   async setDataToAsyncStorage(keys, values){
     for (let p=0; p<keys.length; p++){
-      console.log(keys[p]);
-      console.log(values[p]);
       if (values[p] !== undefined){
         await AsyncStorage.setItem(keys[p], values[p]);
       }
@@ -129,7 +126,6 @@ export default class ProfileScreen extends React.Component {
 
     this.setState({isOverlayForPictureVisible: false})
 
-    console.log(response);
 
     if (response.cancelled){
       console.log("Le changement de photo a été annulé");
@@ -161,12 +157,61 @@ export default class ProfileScreen extends React.Component {
       })
       .catch(err => console.log(err))
     }
-
-    // if (!result.cancelled) {
-    //   this.setState({ image: result.uri });
-    // }
-
   };
+
+  _onPressIsAuthorizedPhoneAccess(){
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        id: this.state.id,
+        isAuthorized: !this.state.isAuthorizedPhoneAccess
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    };
+
+    return fetch( Api + '/api/edit/profile/authorization/phone', data)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.statut === "SUCCESS" ){
+        this.setState({isAuthorizedPhoneAccess: !this.state.isAuthorizedPhoneAccess})
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  _onPressIsAuthorizedEmailAccess(){
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        id: this.state.id,
+        isAuthorized: !this.state.isAuthorizedEmailAccess
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    };
+
+    return fetch( Api + '/api/edit/profile/authorization/email', data)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson.statut === "SUCCESS" ){
+        this.setState({isAuthorizedEmailAccess: !this.state.isAuthorizedEmailAccess})
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
 
   refreshFunction(_this){
     let keys = ['name', 'position', 'enterprise'];
@@ -186,7 +231,6 @@ export default class ProfileScreen extends React.Component {
           break;
         }
       })
-      console.log(_this.state);
     })
   }
 
@@ -244,42 +288,55 @@ export default class ProfileScreen extends React.Component {
             />
             <View style={{alignItems: 'center', marginTop: 30, marginBottom: 30}}>
               <Text style={{fontWeight: 'bold', fontSize: 20}}>{this.state.name}</Text>
-              <Text style={{fontStyle: 'italic'}} >{this.state.position || "Poste"} chez {this.state.enterprise || "Enterprise"}</Text>
+              <Text style={{fontStyle: 'italic'}} >{this.state.position || "Poste"} at {this.state.enterprise || "Enterprise"}</Text>
             </View>
           </View>
         }
 
-
-
-
-
         <View style={{margin: 15}}>
           <ListItem
-            title="Modifier mes informations"
+            title="Edit my information"
             leftIcon={{ name: "edit"}}
             chevron
             onPress={() => {
-
               this.props.navigation.navigate('EditProfile', {refreshFunction: this.refreshFunction, _this: this})
             }}
           />
           <ListItem
-            title="Disponibilités et intérêts"
+            title="Availability and interest"
             leftIcon={{ name: "av-timer"}}
             bottomDivider
             chevron
             onPress={() => {this.props.navigation.navigate('EditAvailAndInter')}}
-            style={{marginBottom: 50}}
+            style={{marginBottom: 10}}
           />
 
+          <CheckBox
+            center
+            iconRight
+            title='Show my phone'
+            checked={this.state.isAuthorizedPhoneAccess}
+            onPress={() => this._onPressIsAuthorizedPhoneAccess()}
+          />
+
+          <CheckBox
+            center
+            iconRight
+            title='Show my email address'
+            checked={this.state.isAuthorizedEmailAccess}
+            onPress={() => this._onPressIsAuthorizedEmailAccess()}
+          />
+
+          <Divider style={{backgroundColor: 'grey', marginTop: 10}} />
+
           <ListItem
-            title="Nous contacter"
+            title="Contact us"
             leftIcon={{ name: "mail"}}
             chevron
             onPress={() => {this.props.navigation.navigate('ContactUs')}}
           />
           <ListItem
-            title="Deconnexion"
+            title="Log out"
             leftIcon={{ name: "exit-to-app"}}
             chevron
             onPress={() => this.logout()}

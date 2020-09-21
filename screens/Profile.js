@@ -86,7 +86,7 @@ export default class ProfileScreen extends React.Component {
       })
     })
     if (this.state.name === "" || this.state.position === "Poste" || this.state.enterprise == "Entreprise"){
-      console.log("EMPTY TA MERE");
+      console.log("EMPTY");
       console.log(this.state.id);
     }
   }

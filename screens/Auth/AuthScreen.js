@@ -103,7 +103,7 @@ export default class AuthScreen extends React.Component {
             json.user.enterprise
           ];
           this.setDataToAsyncStorage(keys, values);
-          if (json.user.firstlaunch == true){
+          if (json.user.firstlaunch === true){
             this.props.navigation.navigate('FirstLaunchWithFacebook');
           } else {
             this.props.navigation.navigate('MainApp');
@@ -171,6 +171,7 @@ export default class AuthScreen extends React.Component {
       return fetch( Api + '/api/login', data)
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log(responseJson)
         switch (responseJson.statut) {
           case 'ERROR':
             this.setState({messageError: responseJson.message});
@@ -278,7 +279,7 @@ export default class AuthScreen extends React.Component {
                 style={{backgroundColor: 'red',borderRadius: 2,alignSelf: 'center',marginTop: 20, width: "100%"}}
                 onPress={() => this.submit()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',padding: 20, color: 'white', textAlign: 'center'}}>Sign in</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20, textAlign: 'center'}}>Sign in</Text>
                 </View>
               </TouchableOpacity>
 
@@ -294,7 +295,7 @@ export default class AuthScreen extends React.Component {
                 style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, width: "100%"}}
                 onPress={() => this._goInscription()}>
                 <View style={{justifyContent:'center'}}>
-                  <Text style={{justifyContent:'center',color: 'white',padding: 20,marginLeft: 50,marginRight: 50, color: 'white'}}>Sign up</Text>
+                  <Text style={{justifyContent:'center',color: 'white',padding: 20,marginLeft: 50,marginRight: 50}}>Sign up</Text>
                 </View>
               </TouchableOpacity>
             </View>

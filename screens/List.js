@@ -40,7 +40,7 @@ export default class ListScreen extends React.Component {
 
     const { navigation } = this.props;
     this.focusListener = navigation.addListener("didFocus", () => {
-      this._getLocation();
+      this._getLocation().then( () => {this._getLocation()});
     });
 
     this._getLocation();
@@ -74,7 +74,7 @@ export default class ListScreen extends React.Component {
           fetch(Api + "/api/geoloc/common/" + user._id + "/" + this.email)
           .then((response) => response.json())
           .then((responseJson) => {
-            if (responseJson.common == 'true'){
+            if (responseJson.common === 'true'){
               if (user.picture === undefined){
                 user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
               } else if (!(user.picture.split(':')[0] === "https")){
@@ -83,7 +83,7 @@ export default class ListScreen extends React.Component {
               result.push(user);
             }
             i = i+1;
-            if (i == numberUsers){
+            if (i === numberUsers){
               this.setState({users: result, loading: false})
             }
           })
@@ -117,7 +117,7 @@ export default class ListScreen extends React.Component {
       }
       {this.state.users.length === 0  && this.state.loading === false ?
         <Text style={{marginTop: 30, fontSize: 16, textAlign: 'center'}}>No match at the moment. Try again later.</Text> :
-      <Text></Text>}
+      <Text/>}
       </View>
     );
   }

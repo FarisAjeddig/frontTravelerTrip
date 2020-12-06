@@ -28,6 +28,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.businesstraveler.bt",
       "supportsTablet": true
     },
     "android": {

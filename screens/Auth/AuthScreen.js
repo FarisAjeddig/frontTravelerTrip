@@ -44,7 +44,9 @@ export default class AuthScreen extends React.Component {
       AsyncStorage.getItem('email').then((value) => {
         if (value !== null){
           AsyncStorage.getItem('firstlaunch').then((value) => {
-            if (value){
+            console.log(value);
+            console.log(!value);
+            if (!value){
               this.props.navigation.navigate('FirstLaunch');
             } else {
               this.props.navigation.navigate('MainApp');

@@ -40,12 +40,14 @@ export default class ListScreen extends React.Component {
 
     const { navigation } = this.props;
     this.focusListener = navigation.addListener("didFocus", () => {
-      this._getLocation().then( () => {this._getLocation()});
+      this._getLocation()
+      // .then(() => {this._getLocation()});
     });
 
-    this._getLocation();
+    // this._getLocation();
     return getCurrentLocation().then(position => {
       if (position) {
+        this._getLocation();
         this.setState({
           location: {coords: {
             latitude: position.coords.latitude,
@@ -59,14 +61,18 @@ export default class ListScreen extends React.Component {
   }
 
   _getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Permissions.getAsync(Permissions.LOCATION);
     if (status !== 'granted'){
       // console.log('PERMISSION NOT GRANTED');
     }
     const location = await Location.getCurrentPositionAsync();
+    console.log("GET LOCATION LIST");
     return fetch( Api + "/api/geoloc/users/" + location.coords.longitude + "/" + location.coords.latitude + "/" + this.email)
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log("USER RESPONSEJSON");
+        console.log(responseJson);
+        console.log("AFTER LOG RESPONSEJSON");
         var result = [];
         var i = 0;
         var numberUsers = responseJson.users.length;
@@ -74,6 +80,7 @@ export default class ListScreen extends React.Component {
           fetch(Api + "/api/geoloc/common/" + user._id + "/" + this.email)
           .then((response) => response.json())
           .then((responseJson) => {
+            console.log(responseJson);
             if (responseJson.common === 'true'){
               if (user.picture === undefined){
                 user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"

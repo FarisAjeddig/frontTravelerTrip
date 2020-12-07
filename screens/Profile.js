@@ -85,10 +85,8 @@ export default class ProfileScreen extends React.Component {
         this.setState({loading: false});
       })
     })
-    if (this.state.name === "" || this.state.position === "Poste" || this.state.enterprise == "Entreprise"){
-      console.log("EMPTY");
-      console.log(this.state.id);
-    }
+    // if (this.state.name === "" || this.state.position === "Poste" || this.state.enterprise == "Entreprise"){
+    // }
   }
 
   async setDataToAsyncStorage(keys, values){
@@ -102,7 +100,7 @@ export default class ProfileScreen extends React.Component {
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
       if (status !== 'granted') {
         alert('Sorry, we need camera roll permissions to make this work!');
       }

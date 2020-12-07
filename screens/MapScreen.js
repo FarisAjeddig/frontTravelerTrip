@@ -58,7 +58,6 @@ export default class MapScreen extends React.Component {
         this.email = value;
       }
     });
-    this._getLocation();
 
     const { navigation } = this.props;
     this.focusListener = navigation.addListener("didFocus", () => {
@@ -67,6 +66,7 @@ export default class MapScreen extends React.Component {
 
     return getCurrentLocation().then(position => {
       if (position) {
+        this._getLocation();
         this.setState({
           location: {coords: {
             latitude: position.coords.latitude,
@@ -80,7 +80,7 @@ export default class MapScreen extends React.Component {
   }
 
   _getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    const { status } = await Permissions.getAsync(Permissions.LOCATION);
     if (status !== 'granted'){
       // console.log('PERMISSION NOT GRANTED');
     }

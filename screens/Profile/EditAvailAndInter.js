@@ -115,7 +115,7 @@ export default class EditAvailAndInter extends React.Component {
 
   render () {
     return (
-      <ScrollView>
+      <ScrollView style={styles.container}>
 
         <View style={{margin: 20}}>
           {/* Interests  */}
@@ -242,7 +242,8 @@ export default class EditAvailAndInter extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 0,
+    padding: 10,
     backgroundColor: '#fff',
   },
 });

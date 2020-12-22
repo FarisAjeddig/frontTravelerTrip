@@ -1,4 +1,4 @@
-import * as WebBrowser from 'expo-web-browser';
+// import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Image,
@@ -269,5 +269,5 @@ export default class FirstLaunchScreen extends React.Component {
 }
 
 FirstLaunchScreen.navigationOptions = {
-  header: null,
+  headerShown: false
 };

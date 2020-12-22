@@ -1,4 +1,4 @@
-import * as WebBrowser from 'expo-web-browser';
+// import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Image,
@@ -14,12 +14,13 @@ import {
   AsyncStorage,
   Dimensions,
   Alert,
-  TouchableHighlight
+  TouchableHighlight,
+    TextInput
 } from 'react-native';
 import * as Facebook from 'expo-facebook';
 import { CheckBox, Button } from 'react-native-elements';
 import Api from '../../constants/Api';
-import {TextField, OutlinedTextField} from 'react-native-material-textfield';
+// import {TextField, OutlinedTextField} from 'react-native-material-textfield';
 
 const fbId = "237940337207466";
 const fbSecret = "2c22afd4578ecbff2eea71d76be8d0f6";
@@ -225,7 +226,7 @@ export default class FirstLaunchScreen extends React.Component {
             <View style={{margin: 20}}>
               <Text style={{fontSize: 25, color: 'red'}}>Tess us more !</Text>
 
-              <TextField
+              <TextInput
                 label="Position"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -239,7 +240,7 @@ export default class FirstLaunchScreen extends React.Component {
                 placeholder="Sales director"
                 keyboardType='default'
               />
-              <TextField
+              <TextInput
                 label="Enterprise"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -254,7 +255,7 @@ export default class FirstLaunchScreen extends React.Component {
                 keyboardType='default'
               />
 
-              <TextField
+              <TextInput
                 label='Phone number'
                 placeholder="+33612345678"
                 keyboardType='phone-pad'
@@ -393,5 +394,5 @@ export default class FirstLaunchScreen extends React.Component {
 }
 
 FirstLaunchScreen.navigationOptions = {
-  header: null,
+  headerShown: false
 };

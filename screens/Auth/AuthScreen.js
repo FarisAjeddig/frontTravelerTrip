@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Image,
@@ -17,8 +16,9 @@ import {
   TouchableHighlight
 } from 'react-native';
 import * as Facebook from 'expo-facebook';
-import {TextField} from 'react-native-material-textfield';
-import PasswordInputText from 'react-native-hide-show-password-input';
+import { Input } from 'react-native-elements'
+// import {TextField} from 'react-native-material-textfield';
+// import PasswordInputText from 'react-native-hide-show-password-input';
 import Api from '../../constants/Api';
 
 const fbId = "237940337207466";
@@ -44,8 +44,6 @@ export default class AuthScreen extends React.Component {
       AsyncStorage.getItem('email').then((value) => {
         if (value !== null){
           AsyncStorage.getItem('firstlaunch').then((value) => {
-            console.log(value);
-            console.log(!value);
             if (!value){
               this.props.navigation.navigate('FirstLaunch');
             } else {
@@ -59,7 +57,7 @@ export default class AuthScreen extends React.Component {
     // Connexion via Facebook
     loginWithFacebook = async () => {
       try {
-        await Facebook.initializeAsync(fbId);
+        await Facebook.initializeAsync({fbId});
         const { type, token, expires, permissions, declinedPermissions } = await Facebook.logInWithReadPermissionsAsync({
           permissions: ['public_profile', 'email'],
           behavior: 'native'
@@ -104,6 +102,7 @@ export default class AuthScreen extends React.Component {
             json.user.position,
             json.user.enterprise
           ];
+          console.log(json.user)
           this.setDataToAsyncStorage(keys, values);
           if (json.user.firstlaunch === true){
             this.props.navigation.navigate('FirstLaunchWithFacebook');
@@ -133,6 +132,7 @@ export default class AuthScreen extends React.Component {
     }
 
     onPassChange(pass) {
+      console.log(pass)
       this.password = pass
     }
 
@@ -173,7 +173,6 @@ export default class AuthScreen extends React.Component {
       return fetch( Api + '/api/login', data)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson)
         switch (responseJson.statut) {
           case 'ERROR':
             this.setState({messageError: responseJson.message});
@@ -248,8 +247,8 @@ export default class AuthScreen extends React.Component {
               </View>
             </Modal>
 
-            <View style={{margin: 20}}>
-              <TextField
+            <View style={{margin: 20, paddingTop: 20}}>
+              <Input
                 label="E-mail"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -263,8 +262,7 @@ export default class AuthScreen extends React.Component {
                 placeholder="example@gmail.com"
                 keyboardType='email-address'
               />
-              <PasswordInputText
-                  value={this.password}
+              <Input
                   iconColor='black'
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -276,6 +274,8 @@ export default class AuthScreen extends React.Component {
                   tintColor='black'
                   placeholder="********"
                   onChangeText={(password) => this.onPassChange(password)}
+                  // value={this.password}
+                  secureTextEntry={true}
               />
               <TouchableOpacity
                 style={{backgroundColor: 'red',borderRadius: 2,alignSelf: 'center',marginTop: 20, width: "100%"}}
@@ -307,7 +307,7 @@ export default class AuthScreen extends React.Component {
 }
 
 AuthScreen.navigationOptions = {
-  header: null,
+  headerShown: false
 };
 
 const styles = StyleSheet.create({

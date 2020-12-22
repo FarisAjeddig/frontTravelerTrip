@@ -8,7 +8,7 @@ import {
   View,
   ActivityIndicator
 } from 'react-native';
-import { List, ListItem } from 'react-native-elements'
+import { List, ListItem, Avatar } from 'react-native-elements';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import Api from '../constants/Api';
@@ -66,13 +66,9 @@ export default class ListScreen extends React.Component {
       // console.log('PERMISSION NOT GRANTED');
     }
     const location = await Location.getCurrentPositionAsync();
-    console.log("GET LOCATION LIST");
     return fetch( Api + "/api/geoloc/users/" + location.coords.longitude + "/" + location.coords.latitude + "/" + this.email)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("USER RESPONSEJSON");
-        console.log(responseJson);
-        console.log("AFTER LOG RESPONSEJSON");
         var result = [];
         var i = 0;
         var numberUsers = responseJson.users.length;
@@ -80,7 +76,6 @@ export default class ListScreen extends React.Component {
           fetch(Api + "/api/geoloc/common/" + user._id + "/" + this.email)
           .then((response) => response.json())
           .then((responseJson) => {
-            console.log(responseJson);
             if (responseJson.common === 'true'){
               if (user.picture === undefined){
                 user.picture = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
@@ -110,16 +105,15 @@ export default class ListScreen extends React.Component {
           <ActivityIndicator size={100} color="#7bacbd" />
           :
         this.state.users.map(user =>
-          <ListItem
-            leftAvatar={{
-              source: { uri: user.picture }
-            }}
-            key={user._id}
-            title={user.name}
-            subtitle={user.position + " at " + user.enterprise}
-            chevron
-            onPress={() => {this.props.navigation.navigate('UserProfile', {'user': user})}}
-          />
+          <ListItem key={user._id} bottomDivider
+          onPress={() => {this.props.navigation.navigate('UserProfile', {'user': user})}}
+          >
+          <Avatar source={{uri: user.picture}} />
+          <ListItem.Content>
+          <ListItem.Title>{user.name}</ListItem.Title>
+          <ListItem.Subtitle>{user.position + " at " + user.enterprise}</ListItem.Subtitle>
+          </ListItem.Content>
+          </ListItem>
         )
       }
       {this.state.users.length === 0  && this.state.loading === false ?

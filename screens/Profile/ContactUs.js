@@ -26,7 +26,6 @@ export default class ContactUs extends React.Component {
   componentDidMount = () => {
     AsyncStorage.getItem('id').then(value => {
       this.id = value
-      console.log(value);
     })
   }
 
@@ -106,12 +105,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     margin: 20
   },
   TextInputStyleClass:{
     textAlign: 'center',
-    height: 50,
     borderWidth: 2,
     borderColor: '#9E9E9E',
     borderRadius: 20 ,

@@ -174,8 +174,8 @@ export default class EditProfile extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
-    margin: 20,
+    paddingTop: 35,
+    padding: 20,
     backgroundColor: '#fff',
   },
   input: {

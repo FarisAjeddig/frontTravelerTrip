@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
-import { ExpoConfigView } from '@expo/samples';
+// import { ExpoConfigView } from '@expo/samples';
 import Api from '../constants/Api';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
@@ -72,7 +72,7 @@ export default class ProfileScreen extends React.Component {
           break;
         case 'picture':
           if (store[i][1] !== null){
-            if (store[i][1].split(':')[0] === "https"){
+            if (store[i][1].split(':')[0] === "https" || store[i][1].split(':')[0] === "http"){
               this.setState({uri : store[i][1]})
             } else {
               this.setState({uri : Api + "/" + store[i][1]})
@@ -126,7 +126,6 @@ export default class ProfileScreen extends React.Component {
 
 
     if (response.cancelled){
-      console.log("Le changement de photo a été annulé");
       return;
     } else {
       const photo = {
@@ -277,10 +276,7 @@ export default class ProfileScreen extends React.Component {
                 uri: this.state.uri
               }}
               style={{width: 150, height: 150, alignSelf: 'center', marginTop: 30}}
-              showEditButton
-              // onEditPress={this._pickImage}
-              onEditPress={() => this.setState({isOverlayForPictureVisible: true})}
-              iconSize={{width: 50, height: 50}}
+              onPress={() => this.setState({isOverlayForPictureVisible: true})}
               title={this.state.initials}
               size="xlarge"
             />
@@ -293,21 +289,28 @@ export default class ProfileScreen extends React.Component {
 
         <View style={{margin: 15}}>
           <ListItem
-            title="Edit my information"
-            leftIcon={{ name: "edit"}}
-            chevron
-            onPress={() => {
-              this.props.navigation.navigate('EditProfile', {refreshFunction: this.refreshFunction, _this: this})
-            }}
-          />
+              bottomDivider
+              onPress={() => {
+                this.props.navigation.navigate('EditProfile', {refreshFunction: this.refreshFunction, _this: this})
+              }}>
+            <Icon name={'edit'} />
+            <ListItem.Content>
+              <ListItem.Title>Edit my information</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+
+
           <ListItem
-            title="Availability and interest"
-            leftIcon={{ name: "av-timer"}}
-            bottomDivider
-            chevron
-            onPress={() => {this.props.navigation.navigate('EditAvailAndInter')}}
-            style={{marginBottom: 10}}
-          />
+              bottomDivider
+              onPress={() => {this.props.navigation.navigate('EditAvailAndInter')}}
+              style={{marginBottom: 10}}>
+            <Icon name={'av-timer'} />
+            <ListItem.Content>
+              <ListItem.Title>Availability and interest</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
 
           <CheckBox
             center
@@ -316,7 +319,6 @@ export default class ProfileScreen extends React.Component {
             checked={this.state.isAuthorizedPhoneAccess}
             onPress={() => this._onPressIsAuthorizedPhoneAccess()}
           />
-
           <CheckBox
             center
             iconRight
@@ -325,26 +327,29 @@ export default class ProfileScreen extends React.Component {
             onPress={() => this._onPressIsAuthorizedEmailAccess()}
           />
 
-          <Divider style={{backgroundColor: 'grey', marginTop: 10}} />
+          <Divider style={{backgroundColor: 'grey', marginTop: 10, marginBottom: 10}} />
+
 
           <ListItem
-            title="Contact us"
-            leftIcon={{ name: "mail"}}
-            chevron
-            onPress={() => {this.props.navigation.navigate('ContactUs')}}
-          />
+              bottomDivider
+              onPress={() => {this.props.navigation.navigate('ContactUs')}}>
+            <Icon name={'mail'} />
+            <ListItem.Content>
+              <ListItem.Title>Contact us</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+
           <ListItem
-            title="Log out"
-            leftIcon={{ name: "exit-to-app"}}
-            chevron
-            onPress={() => this.logout()}
-          />
-          {/*<ListItem
-            title="Supprimer mon compte"
-            leftIcon={{ name: "delete"}}
-            chevron
-            onPress={() => {}}
-          />*/}
+              bottomDivider
+              onPress={() => this.logout()}>
+            <Icon name={'exit-to-app'} />
+            <ListItem.Content>
+              <ListItem.Title>Log out</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+
         </View>
       </ScrollView>
     );

@@ -63,7 +63,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
    List: {
      screen: List,
      navigationOptions: {
-       header: null
+       headerShown: false
      }
    }
  });
@@ -72,14 +72,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
    MainHome: {
      screen: MapScreen,
      navigationOptions: {
-       header: null
+       headerShown: false
      }
    },
    UserProfile: {
      screen: UserProfile,
      navigationOptions: {
        tabBarVisible: true,
-       header: null
+       headerShown: false
      }
    }
  })
@@ -89,7 +89,7 @@ const ProfilNavigator = createStackNavigator({
  Profil: {
    screen: Profile,
    navigationOptions: {
-     header: null
+     headerShown: false
    }
  },
  EditProfile: {

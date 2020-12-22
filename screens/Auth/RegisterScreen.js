@@ -1,4 +1,4 @@
-import * as WebBrowser from 'expo-web-browser';
+// import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Image,
@@ -16,10 +16,11 @@ import {
   Alert,
   TouchableHighlight
 } from 'react-native';
-import {TextField, OutlinedTextField} from 'react-native-material-textfield';
-import PasswordInputText from 'react-native-hide-show-password-input';
-import PhoneInput from 'react-native-phone-input'
-import CountryPicker from 'react-native-country-picker-modal';
+import { Input } from 'react-native-elements';
+// import {TextField, OutlinedTextField} from 'react-native-material-textfield';
+// import PasswordInputText from 'react-native-hide-show-password-input';
+// import PhoneInput from 'react-native-phone-input'
+// import CountryPicker from 'react-native-country-picker-modal';
 import Api from '../../constants/Api';
 
 
@@ -126,7 +127,6 @@ export default class RegisterScreen extends React.Component {
       return fetch( Api + '/api/register', data)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
         switch (responseJson.statut) {
           case 'ERROR':
             this.setState({messageError: responseJson.errors});
@@ -196,7 +196,8 @@ export default class RegisterScreen extends React.Component {
               </View>
             </Modal>
             <View style={{margin: 20}}>
-              <TextField
+                <Text style={{fontSize:23, textAlign: "center", marginBottom: 30}}>Register a new account</Text>
+              <Input
                 label="E-mail"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -206,11 +207,11 @@ export default class RegisterScreen extends React.Component {
                 fontSize={20}
                 titleFontSize={17}
                 onChangeText={(email) => this.onMailChange(email)}
-                value={this.mail}
+                // value={this.mail}
                 placeholder="example@gmail.com"
                 keyboardType='email-address'
               />
-              <TextField
+              <Input
                 label="Last and first name"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -220,11 +221,11 @@ export default class RegisterScreen extends React.Component {
                 fontSize={20}
                 titleFontSize={17}
                 onChangeText={(name) => this.onNameChange(name)}
-                value={this.name}
+                // value={this.name}
                 placeholder="Martin MATIN"
                 keyboardType='default'
               />
-              <TextField
+              <Input
                 label="Position"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -234,11 +235,11 @@ export default class RegisterScreen extends React.Component {
                 fontSize={20}
                 titleFontSize={17}
                 onChangeText={(position) => this.onPostChange(position)}
-                value={this.position}
+                // value={this.position}
                 placeholder="Sales director"
                 keyboardType='default'
               />
-              <TextField
+              <Input
                 label="Enterprise"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -248,12 +249,12 @@ export default class RegisterScreen extends React.Component {
                 fontSize={20}
                 titleFontSize={17}
                 onChangeText={(enterprise) => this.onEnterpriseChange(enterprise)}
-                value={this.enterprise}
+                // value={this.enterprise}
                 placeholder="McDonald's"
                 keyboardType='default'
               />
 
-              <TextField
+              <Input
                 label='Phone number'
                 placeholder="+33612345678"
                 keyboardType='phone-pad'
@@ -265,10 +266,10 @@ export default class RegisterScreen extends React.Component {
                 fontSize={20}
                 titleFontSize={17}
                 onChangeText={(phone) => this.onPhoneChange(phone)}
-                value={this.enterprise}
+                // value={this.enterprise}
               />
-              <PasswordInputText
-                  value={this.password}
+              <Input
+                  // value={this.password}
                   iconColor='black'
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -280,10 +281,11 @@ export default class RegisterScreen extends React.Component {
                   tintColor='black'
                   placeholder="********"
                   onChangeText={(password) => this.onPassChange(password)}
+                  secureTextEntry={true}
               />
 
-              <PasswordInputText
-                  value={this.password2}
+              <Input
+                  // value={this.password2}
                   iconColor='black'
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -295,6 +297,7 @@ export default class RegisterScreen extends React.Component {
                   tintColor='black'
                   placeholder="********"
                   onChangeText={(password) => this.onPass2Change(password)}
+                  secureTextEntry={true}
               />
               <TouchableOpacity
                 style={{backgroundColor: '#294f79', alignItems: 'center', marginTop: 20, marginBottom: 200, width: "100%"}}
@@ -310,14 +313,14 @@ export default class RegisterScreen extends React.Component {
 }
 
 RegisterScreen.navigationOptions = {
-  header: null,
+    headerShown: false
 };
 
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.width,
     flex: 1,
-    backgroundColor: '#f5efef',
-    marginTop: 20
+    // backgroundColor: '#f5efef',
+    marginTop: 40
   }
 });

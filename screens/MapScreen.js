@@ -1,4 +1,4 @@
-import * as WebBrowser from 'expo-web-browser';
+// import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import MapView from 'react-native-maps';
 import {
@@ -282,7 +282,7 @@ export default class MapScreen extends React.Component {
 }
 
 MapScreen.navigationOptions = {
-  header: null,
+  headerShown: false
 };
 
 const styles = StyleSheet.create({

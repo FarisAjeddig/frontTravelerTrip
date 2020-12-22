@@ -3,7 +3,6 @@
     "name": "Business Traveler",
     "slug": "BT",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",

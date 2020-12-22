@@ -5,7 +5,7 @@ import {
   View,
   FlatList
 } from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
+// import { ExpoLinksView } from '@expo/samples';
 import { Avatar, ListItem, Overlay, Icon, Text } from 'react-native-elements';
 import Api from '../constants/Api';
 
@@ -39,7 +39,7 @@ export default class UserProfile extends React.Component {
   componentDidMount(){
     let user = this.props.navigation.state.params.user;
     if (user.picture !== null && user.picture !== undefined){
-      if (user.picture.split(':')[0] === "https"){
+      if (user.picture.split(':')[0] === "https" || user.picture.split(':')[0] === "http"){
         this.setState({uri : user.picture})
       } else {
         this.setState({uri : Api + "/" + user.picture})
@@ -93,7 +93,7 @@ export default class UserProfile extends React.Component {
             uri: this.state.uri
           }}
           style={{width: 150, height: 150, alignSelf: 'center', marginTop: 30}}
-          iconSize={{width: 50, height: 50}}
+          // iconSize={{width: 50, height: 50}}
           title={this.state.initials}
           size="xlarge"
         />

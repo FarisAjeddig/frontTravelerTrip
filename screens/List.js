@@ -47,7 +47,9 @@ export default class ListScreen extends React.Component {
     // this._getLocation();
     return getCurrentLocation().then(position => {
       if (position) {
-        this._getLocation();
+        this._getLocation().then(r => {
+          this.setState({loading: false})
+        })
         this.setState({
           location: {coords: {
             latitude: position.coords.latitude,

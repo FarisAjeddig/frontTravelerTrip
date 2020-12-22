@@ -57,7 +57,7 @@ export default class AuthScreen extends React.Component {
     // Connexion via Facebook
     loginWithFacebook = async () => {
       try {
-        await Facebook.initializeAsync({fbId});
+        await Facebook.initializeAsync({appId: fbId});
         const { type, token, expires, permissions, declinedPermissions } = await Facebook.logInWithReadPermissionsAsync({
           permissions: ['public_profile', 'email'],
           behavior: 'native'
